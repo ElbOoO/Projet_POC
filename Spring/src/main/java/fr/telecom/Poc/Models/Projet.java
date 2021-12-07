@@ -9,6 +9,10 @@ public class Projet {
 	@Id
 	@GeneratedValue
 	private Integer id;
-	
+
 	private String nom;
+
+	public Projet(String nom) {
+		this.nom = nom;
+	}
 }

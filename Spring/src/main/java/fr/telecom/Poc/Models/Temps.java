@@ -12,11 +12,18 @@ public class Temps {
 	@Id
 	@GeneratedValue
 	private Integer id;
-	
+
 	private Date date;
-	private Float poids;
+	private Double poids;
 	@ManyToOne
 	private Personne utilisateur;
 	@ManyToOne
 	private Projet projet;
+
+	public Temps(Date date, Double poids, Personne utilisateur, Projet projet) {
+		this.date = date;
+		this.poids = poids;
+		this.utilisateur = utilisateur;
+		this.projet = projet;
+	}
 }
