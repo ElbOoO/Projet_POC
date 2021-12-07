@@ -15,7 +15,8 @@ import fr.telecom.Poc.Repositories.TempsRepository;
 
 @Component
 public class TestDBRunner implements CommandLineRunner {
-
+	// Remplie la database poc_db pour des tests plus tard
+	
 	@Autowired
 	PersonneRepository personneRepo;
 	

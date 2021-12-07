@@ -29,7 +29,7 @@ public class Personne {
 	private String role;
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	private Personne managedBy;
+	private Personne manager;
 
 	public Personne() {
 	}
@@ -47,7 +47,7 @@ public class Personne {
 	}
 
 	public void addManager(Personne manager) {
-		this.managedBy = manager;
+		this.manager = manager;
 	}
 
 	@Override
