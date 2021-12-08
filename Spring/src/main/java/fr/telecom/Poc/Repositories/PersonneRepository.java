@@ -9,5 +9,5 @@ import fr.telecom.Poc.Models.Personne;
 
 @Repository
 public interface PersonneRepository extends JpaRepository<Personne, Integer> {
-	public List<Personne> findByManager(Personne mnaager);
+	public List<Personne> findByManager(Personne manager);
 }
