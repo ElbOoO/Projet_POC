@@ -1,14 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CalendarView, CalendarEvent } from 'angular-calendar';
 import { startOfDay } from 'date-fns';
-
+//https://mattlewis92.github.io/angular-calendar/docs/components/CalendarWeekViewComponent.html DOC
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: 'app-calendar',
+  templateUrl: './calendar.component.html',
+  styleUrls: ['./calendar.component.css']
 })
-export class AppComponent {
+export class CalendarComponent implements OnInit {
 
+  constructor() { }
+
+  ngOnInit(): void {
+  }
   title = 'my-app';
 
   viewDate: Date = new Date();
@@ -33,22 +37,4 @@ export class AppComponent {
     }
   ]
 
-
-  successAlert = false;
-
-  copyToClipboard(value: string): void {
-    const tempInput = document.createElement("input");
-    tempInput.value = value;
-    document.body.appendChild(tempInput);
-    tempInput.select();
-    document.execCommand("copy");
-    document.body.removeChild(tempInput);
-
-    this.successAlert = true;
-
-    setTimeout(() => {
-      this.successAlert = false;
-    }, 900);
-  }
 }
-

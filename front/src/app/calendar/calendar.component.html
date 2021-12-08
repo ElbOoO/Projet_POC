@@ -1,0 +1,26 @@
+<div class="calendarpage">
+    <div class="row text-center">
+        <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+    </div>
+
+    <div [ngSwitch]="CalendarView.Week" class="calendar">
+        <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" 
+        [viewDate]="viewDate" [events]="events" [hourSegments]="1" [dayEndHour]="12" [hourSegmentHeight]="45" [weekStartsOn]="1">
+        </mwl-calendar-week-view>
+    </div>
+
+    <div class="btn-group">
+        <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate">
+            Previous
+        </div>
+        <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">
+            Today
+        </div>
+        <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate">
+            Next
+        </div>
+    </div>
+</div>
+
+
+

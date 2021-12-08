@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FormComponent } from './form.component';
+import { DropdownuserComponent } from './dropdownuser.component';
 
-describe('FormComponent', () => {
-  let component: FormComponent;
-  let fixture: ComponentFixture<FormComponent>;
+describe('DropdownuserComponent', () => {
+  let component: DropdownuserComponent;
+  let fixture: ComponentFixture<DropdownuserComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FormComponent ]
+      declarations: [ DropdownuserComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FormComponent);
+    fixture = TestBed.createComponent(DropdownuserComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
