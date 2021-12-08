@@ -17,7 +17,14 @@ import { DropdownuserComponent } from './dropdownuser/dropdownuser.component';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
  
-const routes: Routes = []
+const routes: Routes =[
+  {path: 'home',component:LoginPageComponent},
+  {path: '',redirectTo:'/home',pathMatch:'full'},
+  {path: 'user',component:CalendarComponent},
+  
+  ];
+
+
 @NgModule({
   declarations: [
     AppComponent,
