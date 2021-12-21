@@ -1,0 +1,21 @@
+#colorpicker{
+height: 40px;
+width: 60px;
+}
+#form{
+    width: 50%;
+    margin: 50px;
+    margin-top: 10px;
+}
+#name-proj{
+
+  
+}
+
+#flex{
+
+    display: flex;
+}
+.h1{
+    text-align: center;
+}
