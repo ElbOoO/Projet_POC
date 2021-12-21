@@ -1,0 +1,18 @@
+<h1>Gestion des projets</h1>
+
+<div id = "flex">
+    
+    <div id = "form">
+    <p>Nom du projet :</p>
+    <input id="name-proj" type="text"/>
+    <p>Couleur du projet :</p>
+    <input ejs-colorpicker type="color" class="form-control" id="colorpicker" name="colorpicker" />
+    <button type="button" (click)="addproject();" class="btn btn-primary">Créer le projet</button>
+    </div>
+
+    <div id = "list"> 
+        <p>liste des projets</p>
+            <li *ngFor="let project of projects">{{project.nom}}  {{project.couleur}}</li>
+
+        </div>
+</div>

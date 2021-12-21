@@ -1,0 +1,81 @@
+<div class="calendarpage">
+    <div class="row text-center">
+        <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+    </div>
+
+    <div [ngSwitch]="CalendarView.Week" class="calendar">
+        <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events"
+            [hourSegments]="1" [dayEndHour]="7" [hourSegmentHeight]="45" [weekStartsOn]="1" [refresh]="refresh">
+        </mwl-calendar-week-view>
+    </div>
+
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group ">
+            <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate">
+                Previous
+            </div>
+            <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">
+                Today
+            </div>
+            <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate">
+                Next
+            </div>
+        </div>
+        <div class="btn-group" role="group" aria-label="Third group">
+            <button class="btn btn-success" (click)="popup = true">Ajouter un temps</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="overlay" *ngIf="popup" onLoad="this.focus()">
+    <div class="popup">
+        <h2>New Event</h2>
+        <p>Select your project</p>
+        <ng-select [items]="cities" bindValue="name" bindLabel="name" placeholder="Select project"
+            [(ngModel)]="selectedProject">
+        </ng-select>
+        <p>Select your date</p>
+        <input type="date" name="date" placeholder="AAAA-MM-DD" [(ngModel)]="selectedDate">
+        <p>Select your time</p>
+        <ng-select [items]="times" bindValue="time" bindLabel="time" placeholder="Select time"
+            [(ngModel)]="selectedTime"></ng-select>
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-success" (click)="addEvent(selectedProject,selectedDate,selectedTime)"
+                (click)="popup = false">Confirm</button>
+            <button class="btn btn-danger" (click)="popup = false">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<br /><br /><br />
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Starts at</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let event of events">
+                <td>
+                    <p class="form-control">{{event.title}}</p>
+                </td>
+                <td>
+                    <p class="form-control">{{event.start}}</p>
+                </td>
+                <td>
+                    <button class="btn btn-danger" (click)="deleteEvent(event)">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
