@@ -8,14 +8,12 @@ import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes =[
   {path: '',redirectTo:'/home',pathMatch:'full'},
-<<<<<<< HEAD
+
   {path: 'user',component:CalendarComponent},
   {path: 'manager',component:FormManagerComponent},
-=======
   {path: 'home',component:LoginPageComponent},
   {path: 'time',component:CalendarComponent},
   {path: 'user',component:ProfileComponent},
->>>>>>> ca70f0cf4691a94f4b67ee39968bdd11773a31ac
   ];
 
 
