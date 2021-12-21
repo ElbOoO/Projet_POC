@@ -17,6 +17,8 @@ import { DropdownuserComponent } from './dropdownuser/dropdownuser.component';
 
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { FormManagerComponent } from './form-manager/form-manager.component';
+import { ProjetComponent } from './projet/projet.component';
 import { ProfileComponent } from './profile/profile.component';
  
 const routes: Routes =[
@@ -35,6 +37,8 @@ const routes: Routes =[
     HomePageComponent,
     LoginPageComponent,
     DropdownuserComponent,
+    FormManagerComponent,
+    ProjetComponent,
     ProfileComponent
   ],
   imports: [
