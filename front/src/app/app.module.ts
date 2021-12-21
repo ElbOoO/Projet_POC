@@ -38,7 +38,7 @@ const routes: Routes =[
     LoginPageComponent,
     DropdownuserComponent,
     FormManagerComponent,
-    ProjetComponent
+    ProjetComponent,
     ProfileComponent
   ],
   imports: [
