@@ -1,4 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -6,21 +8,47 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+  constructor(private httpClient: HttpClient) {}
 
-  constructor() {
-    
-   }
-
-  ngOnInit(): void {
-    
+  ngOnInit(){
+    this.getEvents();
   }
 
-  name : any="thog";
+  //API functions ---------------------------------------------------------
+  apiURL: string = 'https://jsonplaceholder.typicode.com/posts/1';
+  products:any= [];
+  public getApiData(url?: string){   
+
+    return this.httpClient.get<any>(`${this.apiURL}`,
+    { observe: 'response' }).pipe(tap(res => {
+      return res;
+    }));
+  }
+
+  getEvents() {
+    this.getApiData().subscribe(res => { 
+      for (let i = 0; i < 5/*res.body.length*/; i++) {
+        this.products.push(res.body.title);//initialisation projet
+        this.initProfile(res.body.title,"yeey","admin","moi","tt","tt");
+      }
+    });
+  }
+  //API --------------------------------------------------------------------
+
+  /*name : any="thog";
   firstname : any="yeey";
   role : any="user";
   manager: any="moi";
   password : any="tt";
-  passconfirm: any="tt";
+  passconfirm: any="tt";*/
+
+  name : any;
+  firstname : any;
+  role : any;
+  manager: any;
+  password : any;
+  passconfirm: any;
+
 
  compare(password: string, passconfirm: string): Boolean {
     if (password == passconfirm){
@@ -41,6 +69,15 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  initProfile(_name: string,_firstname: string,_role: string,_manager: string,_password: string,_passconfirm: string): void {
+    this.name=_name;
+    this.firstname=_firstname;
+    this.role=_role;
+    this.manager=_manager;
+    this.password=_password;
+    this.passconfirm=_passconfirm;
+  }
+
   save(_name: string,_firstname: string,_role: string,_manager: string,_password: string,_passconfirm: string): void {
     this.name=_name;
     this.firstname=_firstname;
@@ -48,6 +85,7 @@ export class ProfileComponent implements OnInit {
     this.manager=_manager;
     this.password=_password;
     this.passconfirm=_passconfirm;
-    console.log("saved");
+    //console.log("saved");
+    //put and refresh the page
   }
 }

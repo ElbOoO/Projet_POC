@@ -21,6 +21,7 @@ import { FormManagerComponent } from './form-manager/form-manager.component';
 import { ProjetComponent } from './projet/projet.component';
 import { ProfileComponent } from './profile/profile.component';
  
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 const routes: Routes =[
   {path: '',redirectTo:'/home',pathMatch:'full'},
   {path: 'home',component:LoginPageComponent},
@@ -46,7 +47,7 @@ const routes: Routes =[
     AppRoutingModule,
     FormsModule,
     NgSelectModule,
-    DpDatePickerModule,
+    HttpClientModule,
     MDBBootstrapModule.forRoot(),
     CalendarModule.forRoot({
       provide: DateAdapter,

@@ -8,8 +8,6 @@ import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes =[
   {path: '',redirectTo:'/home',pathMatch:'full'},
-
-  {path: 'user',component:CalendarComponent},
   {path: 'manager',component:FormManagerComponent},
   {path: 'home',component:LoginPageComponent},
   {path: 'time',component:CalendarComponent},
