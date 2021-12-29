@@ -3,6 +3,7 @@ package fr.telecom.Poc.Controllers;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,7 @@ public class PersonneController {
 	private PersonneServiceImpl personneService;
 
 	@GetMapping(produces = "application/json")
+	@PreAuthorize("hasRole('Manager') or hasRole('Admin')")
 	public @ResponseBody Iterable<Personne> getAllPersonnes() {
 		return this.personneService.findAllPersonnes();
 	}
@@ -43,6 +45,7 @@ public class PersonneController {
 	}
 
 	@GetMapping(path = "/manager={id}", produces = "application/json")
+	@PreAuthorize("hasRole('Manager') or hasRole('Admin')")
 	public @ResponseBody Iterable<Personne> getPersonnesByManager(@PathVariable Integer id) {
 		Optional<Personne> manager = this.personneService.findPersonne(id);
 
@@ -54,6 +57,7 @@ public class PersonneController {
 	}
 
 	@PostMapping()
+	@PreAuthorize("hasRole('Manager') or hasRole('Admin')")
 	public @ResponseBody String addNewPersonne(@RequestParam String nom, @RequestParam String prenom,
 			@RequestParam String password, @RequestParam String role,
 			@RequestParam(required = false) Integer managerId) {

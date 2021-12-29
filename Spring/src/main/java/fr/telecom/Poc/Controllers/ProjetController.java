@@ -3,6 +3,7 @@ package fr.telecom.Poc.Controllers;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,6 +60,7 @@ public class ProjetController {
 	}
 
 	@PostMapping
+	@PreAuthorize("hasRole('Manager') or hasRole('Admin')")
 	@ResponseBody
 	public String addProjet(@RequestParam String nom, @RequestParam Integer managerId) {
 		Optional<Personne> manager = this.personneService.findPersonne(managerId);
