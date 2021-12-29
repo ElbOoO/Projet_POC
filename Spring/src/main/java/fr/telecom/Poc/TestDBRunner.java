@@ -1,4 +1,4 @@
-package fr.telecom.Poc.Utils;
+package fr.telecom.Poc;
 
 import java.util.Date;
 import java.util.Optional;
@@ -15,7 +15,7 @@ import fr.telecom.Poc.Repositories.ProjetRepository;
 import fr.telecom.Poc.Repositories.TempsRepository;
 
 @Component
-public class DBRunner implements CommandLineRunner {
+public class TestDBRunner implements CommandLineRunner {
 	// Remplie la database poc_db pour des tests plus tard
 	
 	@Autowired
