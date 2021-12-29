@@ -31,9 +31,4 @@ public class PersonneServiceImpl implements PersonneService {
 		return personneRepo.findById(id);
 	}
 
-	@Override
-	public Optional<Personne> findPersonneByUsername(String username) {
-		return this.personneRepo.findByUsername(username);
-	}
-
 }
