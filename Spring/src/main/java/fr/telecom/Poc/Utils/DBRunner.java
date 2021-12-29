@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import fr.telecom.Poc.Models.Personne;
@@ -27,13 +28,16 @@ public class DBRunner implements CommandLineRunner {
 	@Autowired
 	TempsRepository tempsRepo;
 	
+	@Autowired
+	PasswordEncoder encoder;
+	
 	@Override
 	public void run(String... args) throws Exception {
 		System.out.println("--- Début du runner ---");
 		
-		Personne thomas = new Personne("Gagnaire", "Thomas", "1234", "user");
-		Personne gregoire = new Personne("Biron", "Gregoire", "azerty", "manager");
-		Personne ruben = new Personne("Feliciano", "Ruben", "password", "admin");
+		Personne thomas = new Personne("Gagnaire", "Thomas", encoder.encode("1234"), ListeRoles.User.name());
+		Personne gregoire = new Personne("Biron", "Gregoire", encoder.encode("azerty"), ListeRoles.Manager.name());
+		Personne ruben = new Personne("Feliciano", "Ruben", encoder.encode("password"), ListeRoles.Admin.name());
 		
 		thomas.setManager(gregoire);
 		
