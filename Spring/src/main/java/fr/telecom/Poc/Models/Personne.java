@@ -90,6 +90,10 @@ public class Personne {
 	public void setManager(Personne manager) {
 		this.manager = manager;
 	}
+	
+	public String getUsername() {
+		return this.prenom + "." + this.nom;
+	}
 
 	@Override
 	public String toString() {
