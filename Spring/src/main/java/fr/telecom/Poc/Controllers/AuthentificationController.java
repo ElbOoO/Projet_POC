@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,7 @@ import fr.telecom.Poc.Security.Jwt.JwtUtils;
 import fr.telecom.Poc.Security.Services.UserDetailsImpl;
 
 @Controller
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping(path = "/auth")
 public class AuthentificationController {
 	@Autowired
