@@ -3,6 +3,7 @@ package fr.telecom.Poc.Controllers;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -67,8 +68,12 @@ public class PersonneController {
 		if (managerId != null) {
 			p.setManager(this.personneService.findPersonne(managerId).get());
 		}
-
+		
+		try {
 		this.personneRepo.save(p);
+		}catch (DataIntegrityViolationException e) {
+			return "This username is already taken";
+		}
 		return "Saved";
 	}
 }
