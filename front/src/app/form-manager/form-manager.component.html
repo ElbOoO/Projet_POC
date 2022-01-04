@@ -1,18 +1,63 @@
-<h1>Gestion des projets</h1>
-
-<div id = "flex">
-    
-    <div id = "form">
-    <p>Nom du projet :</p>
-    <input id="name-proj" type="text"/>
-    <p>Couleur du projet :</p>
-    <input ejs-colorpicker type="color" class="form-control" id="colorpicker" name="colorpicker" />
-    <button type="button" (click)="addproject();" class="btn btn-primary">Créer le projet</button>
+<div class="managerpage">
+    <div class="row text-center">
+        <h3>Gestion des projets</h3>
     </div>
 
-    <div id = "list"> 
-        <p>liste des projets</p>
-            <li *ngFor="let project of projects">{{project.nom}}  {{project.couleur}}</li>
-
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group" role="group" aria-label="Third group">
+            <button type="button" (click)="popupAddProject = true" class="btn btn-primary">Créer un nouveau
+                projet</button>
         </div>
+    </div>
+
+    <div class="overlay" *ngIf="popupAddProject" onLoad="this.focus()">
+        <div class="popup">
+            <div id="form">
+                <p>Nom du projet :</p>
+                <input id="name-proj" type="text" [(ngModel)]="projectName" />
+                <p>Couleur du projet :</p>
+                <input ejs-colorpicker type="color" class="form-control" id="colorpicker" name="colorpicker"
+                    [(ngModel)]="projectColor" />
+            </div>
+            <div class="d-flex justify-content-between">
+                <button class="btn btn-success" (click)="addproject(projectName,projectColor)"
+                    (click)="popupAddProject = false">
+                    Créer </button>
+                <button class="btn btn-danger" (click)="popupAddProject = false">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <br /><br /><br />
+    <div class="d-flex justify-content-center">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th class="tabwidth">Color</th>
+                        <th class="tabwidth">Remove</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let project of projects; let i = index">
+                        <td>
+                            <p class="form-control">{{project.nom}}</p>
+                        </td>
+                        <td>
+                            <input ejs-colorpicker type="color" class="form-control" id="colorpicker" name="colorpicker"
+                                [(ngModel)]="project.couleur" disabled=true>
+                            <!--{{project.couleur}}-->
+                        </td>
+                        <td>
+                            <button class="btn btn-danger" (click)="removeItem(i)">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

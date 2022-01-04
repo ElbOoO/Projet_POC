@@ -4,6 +4,9 @@
   margin-left: 5%;
   margin-top: 20px;
 }
+.table-responsive {
+  width: 90%;
+}
 .btn-group {
   width: 20%;
   margin-left: 40%;
@@ -12,6 +15,9 @@
 
 .calendarpage {
   margin-top: 2%;
+}
+.tabwidth {
+  /* width: 100px; */
 }
 
 .overlay {
@@ -42,6 +48,7 @@
   color: #333;
   font-family: Tahoma, Arial, sans-serif;
 }
+
 .popup .close {
   position: absolute;
   top: 20px;

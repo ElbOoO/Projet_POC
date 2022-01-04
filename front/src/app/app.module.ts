@@ -11,14 +11,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
-import { HomePageComponent } from './home-page/home-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { DropdownuserComponent } from './dropdownuser/dropdownuser.component';
 
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { FormManagerComponent } from './form-manager/form-manager.component';
-import { ProjetComponent } from './projet/projet.component';
 import { ProfileComponent } from './profile/profile.component';
  
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -35,11 +33,9 @@ const routes: Routes =[
     AppComponent,
     CalendarComponent,
     NavBarComponent,
-    HomePageComponent,
     LoginPageComponent,
     DropdownuserComponent,
     FormManagerComponent,
-    ProjetComponent,
     ProfileComponent
   ],
   imports: [

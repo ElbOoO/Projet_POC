@@ -22,7 +22,8 @@
             </div>
         </div>
         <div class="btn-group" role="group" aria-label="Third group">
-            <button class="btn btn-success" (click)="popup = true">Ajouter un temps</button>
+            <button class="btn btn-success" (click)="popupAddTime = true">Add New Time</button>
+            <button class="btn btn-warning" (click)="popupExportPDF = true">Export to PDF</button>
         </div>
     </div>
 </div>
@@ -30,11 +31,11 @@
 
 
 
-<div class="overlay" *ngIf="popup" onLoad="this.focus()">
+<div class="overlay" *ngIf="popupAddTime" onLoad="this.focus()">
     <div class="popup">
         <h2>New Event</h2>
         <p>Select your project</p>
-        <ng-select [items]="projets" bindValue="name" bindLabel="name" placeholder="Select project"
+        <ng-select [items]="projectsList" bindValue="name" bindLabel="name" placeholder="Select project"
             [(ngModel)]="selectedProject">
         </ng-select>
         <p>Select your date</p>
@@ -44,38 +45,56 @@
             [(ngModel)]="selectedTime"></ng-select>
         <div class="d-flex justify-content-between">
             <button class="btn btn-success" (click)="addEvent(selectedProject,selectedDate,selectedTime)"
-                (click)="popup = false">Confirm</button>
-            <button class="btn btn-danger" (click)="popup = false">Cancel</button>
+                (click)="popupAddTime = false">Confirm</button>
+            <button class="btn btn-danger" (click)="popupAddTime = false">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div class="overlay" *ngIf="popupExportPDF" onLoad="this.focus()">
+    <div class="popup">
+        <h2>Exportation des temps</h2>
+        <p>Select starting date</p>
+        <input type="date" name="date" [(ngModel)]="PDF_startingDate">
+        <br>
+        <p>Select ending date</p>
+        <input type="date" name="date" placeholder="AAAA-MM-DD" [(ngModel)]="PDF_endingDate">
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-success" (click)="createPdf(PDF_startingDate,PDF_endingDate)"
+                (click)="popupExportPDF = false">
+                PDF </button>
+            <button class="btn btn-danger" (click)="popupExportPDF = false">Cancel</button>
         </div>
     </div>
 </div>
 
 <br /><br /><br />
+<div class="d-flex justify-content-center">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Project</th>
+                    <th class="tabwidth">Starts at</th>
+                    <th class="tabwidth">Remove</th>
+                </tr>
+            </thead>
 
-<div class="table-responsive">
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Starts at</th>
-                <th>Remove</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <tr *ngFor="let event of events">
-                <td>
-                    <p class="form-control">{{event.title}}</p>
-                </td>
-                <td>
-                    <p class="form-control">{{event.start}}</p>
-                </td>
-                <td>
-                    <button class="btn btn-danger" (click)="deleteEvent(event)">
-                        Delete
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+            <tbody>
+                <tr *ngFor="let event of events">
+                    <td>
+                        <p class="form-control">{{event.title}}</p>
+                    </td>
+                    <td>
+                        <p class="form-control">{{event.start}}</p>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger" (click)="deleteEvent(event)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
