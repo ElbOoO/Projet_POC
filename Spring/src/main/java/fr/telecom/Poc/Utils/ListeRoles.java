@@ -1,7 +1,7 @@
 package fr.telecom.Poc.Utils;
 
 public enum ListeRoles {
-	User, Manager, Admin;
+	ROLE_User, ROLE_Manager, ROLE_Admin;
 
 	public static Boolean isPresent(String str) {
 		for (ListeRoles r : ListeRoles.values()) {

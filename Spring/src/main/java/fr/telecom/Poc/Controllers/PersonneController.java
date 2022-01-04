@@ -1,6 +1,9 @@
 package fr.telecom.Poc.Controllers;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import fr.telecom.Poc.DTO.PersonneDTO;
 import fr.telecom.Poc.Models.Personne;
 import fr.telecom.Poc.Repositories.PersonneRepository;
 import fr.telecom.Poc.Services.ServicesImpl.PersonneServiceImpl;
@@ -31,15 +35,19 @@ public class PersonneController {
 
 	@GetMapping(produces = "application/json")
 	@PreAuthorize("hasRole('Manager') or hasRole('Admin')")
-	public @ResponseBody Iterable<Personne> getAllPersonnes() {
-		return this.personneService.findAllPersonnes();
+	public @ResponseBody Iterable<PersonneDTO> getAllPersonnes() {
+		ArrayList<PersonneDTO> result = new ArrayList<PersonneDTO>();
+
+		this.personneService.findAllPersonnes().forEach(p -> result.add(new PersonneDTO(p)));
+
+		return result;
 	}
 
 	@GetMapping(path = "/{id}", produces = "application/json")
 	@ResponseBody
 	public Personne getPersonneById(@PathVariable Integer id) {
 		Optional<Personne> p = this.personneService.findPersonne(id);
-
+		
 		if (!p.isEmpty()) {
 			return p.get();
 		} else {

@@ -36,9 +36,9 @@ public class DBRunner implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		System.out.println("--- Début du runner ---");
 
-		Personne thomas = new Personne("Gagnaire", "Thomas", encoder.encode("1234"), ListeRoles.User.name());
-		Personne gregoire = new Personne("Biron", "Gregoire", encoder.encode("azerty"), ListeRoles.Manager.name());
-		Personne ruben = new Personne("Feliciano", "Ruben", encoder.encode("password"), ListeRoles.Admin.name());
+		Personne thomas = new Personne("Gagnaire", "Thomas", encoder.encode("1234"), ListeRoles.ROLE_User.name());
+		Personne gregoire = new Personne("Biron", "Gregoire", encoder.encode("azerty"), ListeRoles.ROLE_Manager.name());
+		Personne ruben = new Personne("Feliciano", "Ruben", encoder.encode("password"), ListeRoles.ROLE_Admin.name());
 
 		thomas.setManager(gregoire);
 
@@ -66,10 +66,6 @@ public class DBRunner implements CommandLineRunner {
 		} catch (DataIntegrityViolationException e) {
 			System.out.println("Utilisateur(s) déjà présent(s)");
 		}
-
-		// --- Tests ---
-		Optional<Personne> greg = personneRepo.findById(170);
-		System.out.println(personneRepo.findByManager(greg.get()));
 
 		System.out.println("--- Fin du runner ---");
 	}
