@@ -68,10 +68,10 @@ public class PersonneController {
 		if (managerId != null) {
 			p.setManager(this.personneService.findPersonne(managerId).get());
 		}
-		
+
 		try {
-		this.personneRepo.save(p);
-		}catch (DataIntegrityViolationException e) {
+			this.personneRepo.save(p);
+		} catch (DataIntegrityViolationException e) {
 			return "This username is already taken";
 		}
 		return "Saved";
