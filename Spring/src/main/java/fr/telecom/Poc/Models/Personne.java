@@ -6,9 +6,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "Personne")
+@Table(name = "Personne", uniqueConstraints = {
+		@UniqueConstraint(name = "UniqueUsername", columnNames = { "nom", "prenom" }) })
 public class Personne {
 	@Id
 	@GeneratedValue
@@ -90,7 +92,7 @@ public class Personne {
 	public void setManager(Personne manager) {
 		this.manager = manager;
 	}
-	
+
 	public String getUsername() {
 		return this.prenom + "." + this.nom;
 	}
