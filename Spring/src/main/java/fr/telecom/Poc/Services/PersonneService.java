@@ -11,4 +11,6 @@ public interface PersonneService {
 	public Optional<Personne> findPersonne(Integer id);
 	
 	public List<Personne> findPersonneByManager(Personne manager);
+	
+	public Optional<Personne> findPersonneByUsername(String username);
 }
