@@ -6,21 +6,29 @@
                 </div>
             </div>
             <div class="col-4">
+
                 <div class="login_form">
+                    Log-in to your account
+                    <br><br>
                     <input class="logipage__text" name="username" [(ngModel)]="username" type="text" placeholder="Enter your last name" />
+                    <br>
                     <input class="logipage__text" name="password" [(ngModel)]="password" type="password" placeholder="Password" />
-                    <div class="login__ordiv">
+                    <!-- <div class="login__ordiv">
                         <div class="login__dividor"></div>
                     </div>
-                    <div class="login_pass"> Forgot password?</div>
-                    <button class="login__button" (click)="doLogin()" >Log In</button>
+                    <div class="login_pass"> Forgot password?</div> -->
+                    <br><br>
+ <!--                     <button class="login__button" onClick={this.login}>Log In</button> -->
+                 <button class="login__button" (click)="doLogin()" >Log In</button>
+
                 </div>
             </div>
             <div class="col-4">
                 <div class="login_form">
-                    <input class="logipage__text" type="text" placeholder="First Name" />
-                    <input class="logipage__text" type="text" placeholder="Last Name" />
-                    <input class="logipage__text" type="password" placeholder="Password" />
+                    Create your account
+                    <input class="logipage__text" type="text" placeholder="Enter your first name" />
+                    <input class="logipage__text" type="text" placeholder="Enter your last name" />
+                    <input class="logipage__text" type="password" placeholder="Enter your password" />
                     <button class="login__button" onClick={this.newSignUp}>Sign up</button>
                 </div>
             </div>
