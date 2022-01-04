@@ -7,13 +7,13 @@
             </div>
             <div class="col-4">
                 <div class="login_form">
-                    <input class="logipage__text" type="text" placeholder="Enter your last name" />
-                    <input class="logipage__text" type="password" placeholder="Password" />
+                    <input class="logipage__text" name="username" [(ngModel)]="username" type="text" placeholder="Enter your last name" />
+                    <input class="logipage__text" name="password" [(ngModel)]="password" type="password" placeholder="Password" />
                     <div class="login__ordiv">
                         <div class="login__dividor"></div>
                     </div>
                     <div class="login_pass"> Forgot password?</div>
-                    <button class="login__button" onClick={this.login}>Log In</button>
+                    <button class="login__button" (click)="doLogin()" >Log In</button>
                 </div>
             </div>
             <div class="col-4">
