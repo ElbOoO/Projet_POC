@@ -41,9 +41,9 @@ public class DBRunner implements CommandLineRunner {
 
 		thomas.setManager(gregoire);
 
-		Projet poc = new Projet("Projet POC", gregoire);
-		Projet pri = new Projet("Projet PRI", gregoire);
-		Projet ntiers = new Projet("Projet Architecture N-tiers", ruben);
+		Projet poc = new Projet("Projet POC", "#FF5733", gregoire);
+		Projet pri = new Projet("Projet PRI", "#37B850", gregoire);
+		Projet ntiers = new Projet("Projet Architecture N-tiers", "#31AEF6", ruben);
 
 		Temps t1 = new Temps(new java.sql.Date(new Date().getTime()), 0.5, thomas, poc);
 		Temps t2 = new Temps(new java.sql.Date(new Date().getTime()), 0.25, gregoire, pri);

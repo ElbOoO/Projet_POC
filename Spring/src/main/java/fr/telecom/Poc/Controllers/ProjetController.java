@@ -72,13 +72,13 @@ public class ProjetController {
 	@PostMapping
 	@PreAuthorize("hasRole('Manager') or hasRole('Admin')")
 	@ResponseBody
-	public String addProjet(@RequestParam String nom, @RequestParam Integer managerId) {
+	public String addProjet(@RequestParam String nom, @RequestParam String couleur, @RequestParam Integer managerId) {
 		Optional<Personne> manager = this.personneService.findPersonne(managerId);
 
 		if (manager.isEmpty()) {
 			return "Error : this manager does not exist.";
 		} else {
-			this.projetRepo.save(new Projet(nom, manager.get()));
+			this.projetRepo.save(new Projet(nom, couleur, manager.get()));
 			return "Saved.";
 		}
 	}
