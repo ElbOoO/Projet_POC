@@ -15,7 +15,12 @@ public class PersonneDTO {
 		this.nom = p.getNom();
 		this.prenom = p.getPrenom();
 		this.role = p.getRole();
-		this.manager = p.getManager().getId();
+
+		if (p.getManager() == null) {
+			this.manager = null;
+		} else {
+			this.manager = p.getManager().getId();
+		}
 	}
 
 	public Integer getId() {

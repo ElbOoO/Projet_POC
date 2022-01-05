@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -80,6 +81,18 @@ public class ProjetController {
 		} else {
 			this.projetRepo.save(new Projet(nom, couleur, manager.get()));
 			return "Saved.";
+		}
+	}
+
+	@DeleteMapping(path = "/{id}")
+	@PreAuthorize("hasRole('Manager') or hasRole('Admin')")
+	@ResponseBody
+	public String deleteProjet(@PathVariable Integer id) {
+		if (this.projetService.findProjet(id).isPresent()) {
+			this.projetRepo.deleteById(id);
+			return "Projet supprimé";
+		} else {
+			return "Aucun projet trouvé pour l'id " + id;
 		}
 	}
 }

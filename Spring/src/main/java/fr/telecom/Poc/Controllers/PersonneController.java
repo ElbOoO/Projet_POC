@@ -10,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,7 +61,7 @@ public class PersonneController {
 	public @ResponseBody Iterable<PersonneDTO> getPersonnesByManager(@PathVariable Integer id) {
 		Optional<Personne> manager = this.personneService.findPersonne(id);
 		ArrayList<PersonneDTO> result = new ArrayList<PersonneDTO>();
-		
+
 		if (!manager.isEmpty()) {
 			this.personneService.findPersonneByManager(manager.get()).forEach(p -> result.add(new PersonneDTO(p)));
 			return result;
@@ -85,5 +86,17 @@ public class PersonneController {
 			return "This username is already taken";
 		}
 		return "Saved";
+	}
+
+	@DeleteMapping(path = "/{id}")
+	@PreAuthorize("hasRole('Manager') or hasRole('Admin')")
+	@ResponseBody
+	public String deletePersonne(@PathVariable Integer id) {
+		if (this.personneService.findPersonne(id).isPresent()) {
+			this.personneRepo.deleteById(id);
+			return "Personne supprimée";
+		} else {
+			return "Aucun utilisateur trouvé pour l'id " + id;
+		}
 	}
 }

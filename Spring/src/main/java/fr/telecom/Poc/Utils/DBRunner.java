@@ -62,8 +62,8 @@ public class DBRunner implements CommandLineRunner {
 			tempsRepo.save(t1);
 			tempsRepo.save(t2);
 			tempsRepo.save(t3);
-		} catch (Exception e) {
-			System.out.println(e);
+		} catch (DataIntegrityViolationException e) {
+			System.out.println("Cet utilisateur existe déjà");
 		}
 
 		System.out.println("--- Fin du runner ---");
