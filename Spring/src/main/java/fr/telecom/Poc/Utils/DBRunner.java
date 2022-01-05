@@ -1,7 +1,6 @@
 package fr.telecom.Poc.Utils;
 
 import java.util.Date;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -63,8 +62,8 @@ public class DBRunner implements CommandLineRunner {
 			tempsRepo.save(t1);
 			tempsRepo.save(t2);
 			tempsRepo.save(t3);
-		} catch (DataIntegrityViolationException e) {
-			System.out.println("Utilisateur(s) déjà présent(s)");
+		} catch (Exception e) {
+			System.out.println(e);
 		}
 
 		System.out.println("--- Fin du runner ---");

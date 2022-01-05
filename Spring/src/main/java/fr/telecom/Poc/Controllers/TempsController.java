@@ -1,6 +1,7 @@
 package fr.telecom.Poc.Controllers;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import fr.telecom.Poc.DTO.TempsDTO;
 import fr.telecom.Poc.Models.Personne;
 import fr.telecom.Poc.Models.Projet;
 import fr.telecom.Poc.Models.Temps;
@@ -41,11 +43,11 @@ public class TempsController {
 
 	@GetMapping(path = "/{id}", produces = "application/json")
 	@ResponseBody
-	public Temps getTempsById(@PathVariable Integer id) {
+	public TempsDTO getTempsById(@PathVariable Integer id) {
 		Optional<Temps> t = this.tempsService.findTemps(id);
 
 		if (!t.isEmpty()) {
-			return t.get();
+			return new TempsDTO(t.get());
 		} else {
 			return null;
 		}
@@ -53,11 +55,13 @@ public class TempsController {
 
 	@GetMapping(path = "/utilisateur={userId}", produces = "application/json")
 	@ResponseBody
-	public Iterable<Temps> getTempsByPersonne(@PathVariable Integer userId) {
+	public Iterable<TempsDTO> getTempsByPersonne(@PathVariable Integer userId) {
+		ArrayList<TempsDTO> result = new ArrayList<TempsDTO>();
 		Optional<Personne> utilisateur = this.personneService.findPersonne(userId);
 
 		if (!utilisateur.isEmpty()) {
-			return this.tempsService.findByUtilisateur(utilisateur.get());
+			this.tempsService.findByUtilisateur(utilisateur.get()).forEach(t -> result.add(new TempsDTO(t)));
+			return result;
 		} else {
 			return null;
 		}

@@ -1,5 +1,6 @@
 package fr.telecom.Poc.Controllers;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import fr.telecom.Poc.DTO.ProjetDTO;
 import fr.telecom.Poc.Models.Personne;
 import fr.telecom.Poc.Models.Projet;
 import fr.telecom.Poc.Repositories.ProjetRepository;
@@ -33,17 +35,21 @@ public class ProjetController {
 
 	@GetMapping(produces = "application/json")
 	@ResponseBody
-	public Iterable<Projet> getAllProjets() {
-		return this.projetService.findAllProjets();
+	public Iterable<ProjetDTO> getAllProjets() {
+		ArrayList<ProjetDTO> result = new ArrayList<ProjetDTO>();
+
+		this.projetService.findAllProjets().forEach(p -> result.add(new ProjetDTO(p)));
+
+		return result;
 	}
 
 	@GetMapping(path = "/{id}", produces = "application/json")
 	@ResponseBody
-	public Projet getProjectById(@PathVariable Integer id) {
+	public ProjetDTO getProjectById(@PathVariable Integer id) {
 		Optional<Projet> p = this.projetService.findProjet(id);
 
 		if (!p.isEmpty()) {
-			return p.get();
+			return new ProjetDTO(p.get());
 		} else {
 			return null;
 		}
@@ -51,11 +57,13 @@ public class ProjetController {
 
 	@GetMapping(path = "/manager={managerId}", produces = "application/json")
 	@ResponseBody
-	public Iterable<Projet> getProjetsByManager(@PathVariable Integer managerId) {
+	public Iterable<ProjetDTO> getProjetsByManager(@PathVariable Integer managerId) {
+		ArrayList<ProjetDTO> result = new ArrayList<ProjetDTO>();
 		Optional<Personne> manager = this.personneService.findPersonne(managerId);
 
 		if (!manager.isEmpty()) {
-			return this.projetService.findProjetByManager(manager.get());
+			this.projetService.findProjetByManager(manager.get()).forEach(p -> result.add(new ProjetDTO(p)));
+			return result;
 		} else {
 			return null;
 		}
