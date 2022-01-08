@@ -11,9 +11,13 @@ import org.springframework.stereotype.Component;
 import fr.telecom.Poc.Models.Personne;
 import fr.telecom.Poc.Models.Projet;
 import fr.telecom.Poc.Models.Temps;
+import fr.telecom.Poc.Models.VerrouillageTemps;
 import fr.telecom.Poc.Repositories.PersonneRepository;
 import fr.telecom.Poc.Repositories.ProjetRepository;
 import fr.telecom.Poc.Repositories.TempsRepository;
+import fr.telecom.Poc.Repositories.VerrouillageTempsRepository;
+import fr.telecom.Poc.Services.VerrouillageTempsService;
+import fr.telecom.Poc.Services.ServicesImpl.VerrouillageTempsServiceImpl;
 
 @Component
 public class DBRunner implements CommandLineRunner {
@@ -27,6 +31,12 @@ public class DBRunner implements CommandLineRunner {
 
 	@Autowired
 	TempsRepository tempsRepo;
+
+	@Autowired
+	VerrouillageTempsRepository verrouRepo;
+
+	@Autowired
+	VerrouillageTempsServiceImpl verrouService;
 
 	@Autowired
 	PasswordEncoder encoder;
@@ -49,6 +59,8 @@ public class DBRunner implements CommandLineRunner {
 		Temps t2 = new Temps(new java.sql.Date(new Date().getTime()), 0.25, gregoire, pri);
 		Temps t3 = new Temps(new java.sql.Date(new Date().getTime()), 1.0, ruben, ntiers);
 
+		VerrouillageTemps verrou = new VerrouillageTemps(1, 2022, ruben);
+
 		// --- On remplit la bdd ---
 		try {
 			personneRepo.save(gregoire);
@@ -62,6 +74,8 @@ public class DBRunner implements CommandLineRunner {
 			tempsRepo.save(t1);
 			tempsRepo.save(t2);
 			tempsRepo.save(t3);
+
+			verrouRepo.save(verrou);
 		} catch (DataIntegrityViolationException e) {
 			System.out.println("Cet utilisateur existe déjà");
 		}
