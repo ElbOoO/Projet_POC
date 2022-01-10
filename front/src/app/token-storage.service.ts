@@ -16,12 +16,16 @@ export class TokenStorageService {
     window.sessionStorage.clear();
   }
 
-  public saveToken(token: string) {
-    window.sessionStorage.removeItem(ACCESS_TOKEN);
-    window.sessionStorage.setItem(ACCESS_TOKEN, token);
+  public saveToken(name:string,token: string) {
+    window.sessionStorage.removeItem(name);
+    window.sessionStorage.setItem(name, token);
   }
 
-  public getToken(): string|null {
-    return sessionStorage.getItem(ACCESS_TOKEN);
+  public getToken(name: string): string|null {
+    return window.sessionStorage.getItem(name);
+  }
+  public removeAllToken(){
+    window.sessionStorage.clear()
+
   }
 }

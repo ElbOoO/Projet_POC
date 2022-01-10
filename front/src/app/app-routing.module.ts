@@ -6,13 +6,54 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { ProfileComponent } from './profile/profile.component';
 
 
-const routes: Routes =[
+let routes: Routes =[
+  
   {path: '',redirectTo:'/home',pathMatch:'full'},
+  {path: 'home',component:LoginPageComponent},
   {path: 'manager',component:FormManagerComponent},
   {path: 'home',component:LoginPageComponent},
   {path: 'time',component:CalendarComponent},
   {path: 'user',component:ProfileComponent},
+
   ];
+
+  /*
+if(window.sessionStorage.getItem('role')==null){
+  console.log('not connected')
+  let routes: Routes =[
+  
+    //{path: '',redirectTo:'/home',pathMatch:'full'},
+    {path: 'home',component:LoginPageComponent},
+  ]
+}
+
+if(window.sessionStorage.getItem('role')=='User'){
+  console.log('user connected')
+
+  let routes: Routes =[
+  
+    //{path: '',redirectTo:'/home',pathMatch:'full'},
+    {path: 'home',component:LoginPageComponent},
+    {path: 'time',component:CalendarComponent},
+    {path: 'user',component:ProfileComponent},
+  ]
+}
+
+if(window.sessionStorage.getItem('user')=='manager'|| window.sessionStorage.getItem('user')=='admin' ){
+    console.log('user connected')
+
+  let routes: Routes =[
+  
+    //{path: '',redirectTo:'/home',pathMatch:'full'},
+    {path: 'manager',component:FormManagerComponent},
+    {path: 'home',component:LoginPageComponent},
+    {path: 'time',component:CalendarComponent},
+    {path: 'user',component:ProfileComponent},
+  ]
+}
+
+*/
+
 
 
 @NgModule({

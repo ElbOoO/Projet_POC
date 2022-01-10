@@ -9,7 +9,7 @@
   <links>
 
     <!-- Links -->
-    <ul class="navbar-nav mr-auto">
+    <ul class="navbar-nav mr-auto" *ngIf="logged">
       <li class="nav-item">
         <a class="nav-link waves-light" mdbWavesEffect href="/home">Home Page</a>
       </li>
@@ -20,7 +20,10 @@
         <a class="nav-link waves-light" mdbWavesEffect href="/user">User Profile</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link waves-light" mdbWavesEffect href="/manager">Project Management</a>
+        <a class="nav-link waves-light" *ngIf="manager" mdbWavesEffect href="/manager">Project Management</a>
+      </li>
+    <li class="nav-item">
+        <a class="nav-link waves-light" mdbWavesEffect href="/home" >Deconnect</a>
       </li>
     </ul>
     <!-- Links -->
