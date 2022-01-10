@@ -1,5 +1,5 @@
 <div>
-    <div class="container">
+    <div class="container" *ngIf="!logged">
         <div class="row">
             <div class="col">
                 <div class="login_img">
@@ -19,7 +19,7 @@
                     <div class="login_pass"> Forgot password?</div> -->
                     <br><br>
  <!--                     <button class="login__button" onClick={this.login}>Log In</button> -->
-                 <button class="login__button" (click)="doLogin()" >Log In</button>
+                 <button class="login__button" (click)="doLogin()">Log In</button>
 
                 </div>
             </div>
@@ -38,4 +38,7 @@
             </div>
         </div>
     </div>
+</div>
+<div id="deco">
+    <button class="login__button" (click)='deconnection()' *ngIf="logged" >Sign off</button>
 </div>

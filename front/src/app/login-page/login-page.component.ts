@@ -28,9 +28,16 @@ export class LoginPageComponent implements OnInit {
   //response: responseauth;
 
 
-  constructor(private service:RestapiService) { }
+  constructor(private service:RestapiService,private tokenservice:TokenStorageService) { }
 
   ngOnInit(): void {
+
+    if(window.sessionStorage.getItem('role')!= null){
+
+      this.logged =true
+    }
+
+
   }
   doLogin(): string {
 
@@ -40,15 +47,23 @@ export class LoginPageComponent implements OnInit {
   //  this.data=data;
    // console.log(this.data['access_token'])
     console.log(data)
-    console.log(JSON.stringify(data))
     console.log(JSON.parse((JSON.stringify(data))).accessToken)
     window.sessionStorage.setItem('access_token',JSON.parse((JSON.stringify(data))).accessToken)
-    
+    window.sessionStorage.setItem('role',data.roles)
+    console.log(window.sessionStorage.getItem('role'))
+    window.location.reload();
+
    // window.sessionStorage.setItem("auth-token",data.access_token)
   })
  return ''
   }
- 
+  deconnection(){
+    window.sessionStorage.removeItem('access_token')
+    window.sessionStorage.removeItem('role')
+
+    window.location.reload();
+  }
+ logged = false
 
 }
 

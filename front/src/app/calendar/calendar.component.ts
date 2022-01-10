@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgProbeToken, OnInit } from '@angular/core';
 import { CalendarView, CalendarEvent, CalendarEventTimesChangedEvent } from 'angular-calendar';//https://mattlewis92.github.io/angular-calendar/docs/components/CalendarWeekViewComponent.html DOC
 import { startOfDay } from 'date-fns';
 import { Subject } from 'rxjs';
@@ -7,6 +7,7 @@ import { tap } from 'rxjs';
 
 import jspdf from 'jspdf';
 import 'jspdf-autotable';
+import { RestapiService } from '../restapi.service';
 
 @Component({
   selector: 'app-calendar',
@@ -14,11 +15,11 @@ import 'jspdf-autotable';
   styleUrls: ['./calendar.component.css']
 })
 export class CalendarComponent implements OnInit {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient,private service:RestapiService) {}
 
   ngOnInit(){
     this.getEvents();
-
+    this.getEventsfromapi();
     //test sans API----------------------------------
     this.PDF_userDateList.push(new Date("2021-12-12"))
     this.PDF_userDateList.push(new Date("2022-01-02"))
@@ -36,6 +37,32 @@ export class CalendarComponent implements OnInit {
     }));
   }
 
+  getEventsfromapi(){
+
+  this.service.getTemps(2).subscribe(data=> {
+
+    console.log(data)
+    //console.log(data.projet_id)
+    //console.log(data.date)
+    //console.log(data.poids)
+    for (let i = 0; i < data.length/*res.body.length*/; i++) {
+      this.initEvent("default",data[i].date,data[i].poids)
+    }
+  })
+  
+  
+  }
+  
+  posttempsapi(projet: string,date: string,time: any){
+    console.log(date)
+    console.log(time)
+
+    this.service.post_temps(date,time,'1','1').subscribe(data=>{
+
+      console.log(data.error)
+    })
+    
+      }
   getEvents() {
     this.getApiData().subscribe(res => { 
       for (let i = 0; i < 4/*res.body.length*/; i++) {
@@ -103,6 +130,8 @@ export class CalendarComponent implements OnInit {
         end: addDate(new Date(date),time),
       },
     ];
+    this.posttempsapi(projet,date,time)
+    
     //perform post & f5
   }
 

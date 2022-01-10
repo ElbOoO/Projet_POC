@@ -62,3 +62,10 @@ body {
   margin-top: 12px;
   text-align: center;
 }
+
+#deco{
+  display: flex;
+  justify-content: center;
+  margin-top: 100px;
+  width: 20%;
+}
