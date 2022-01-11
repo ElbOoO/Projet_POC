@@ -63,7 +63,7 @@ public class TempsController {
 		}
 	}
 
-	@GetMapping(path = "/{userId}", produces = "application/json")
+	@GetMapping(path = "/utilisateur={userId}", produces = "application/json")
 	@ResponseBody
 	public Iterable<TempsDTO> getTempsByPersonne(@PathVariable Integer userId) {
 		ArrayList<TempsDTO> result = new ArrayList<TempsDTO>();
@@ -119,7 +119,8 @@ public class TempsController {
 				this.tempsRepo.save(new Temps(date, poids, utilisateur.get(), projet.get()));
 				return "Saved.";
 			} else {
-				return ("Erreur : Impossible de supprimer un temps qui a deja ete exporte.");
+				return ("Erreur : Impossible d'ajouter un temps a cette date " + date
+						+ " : ce mois a deja ete exporte");
 			}
 
 		} else if (projet.isEmpty()) {
@@ -132,11 +133,22 @@ public class TempsController {
 	@DeleteMapping(path = "/{id}")
 	@ResponseBody
 	public String deleteTemps(@PathVariable Integer id) {
-		if (this.tempsRepo.findById(id).isPresent()) {
-			this.tempsRepo.deleteById(id);
-			return "Temps supprimé";
+		Optional<Temps> t = this.tempsService.findTemps(id);
+
+		if (!t.isEmpty()) {
+			Date d = t.get().getDate();
+
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(d);
+			if (!this.verrouService.isLocked(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR),
+					t.get().getUtilisateur())) {
+				this.tempsRepo.deleteById(id);
+				return "Temps supprimé";
+			} else {
+				return "Erreur : Impossible de supprimer ce temps car il a deja ete exporte.";
+			}
 		} else {
-			return "Aucun temps trouvé avec l'id " + id;
+			return "Erreur : Aucun temps trouvé avec l'id " + id;
 		}
 	}
 }
