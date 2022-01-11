@@ -5,16 +5,13 @@ import { FormManagerComponent } from './form-manager/form-manager.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { ProfileComponent } from './profile/profile.component';
 
-
 let routes: Routes =[
-  
   {path: '',redirectTo:'/home',pathMatch:'full'},
   {path: 'home',component:LoginPageComponent},
   {path: 'manager',component:FormManagerComponent},
   {path: 'home',component:LoginPageComponent},
   {path: 'time',component:CalendarComponent},
   {path: 'user',component:ProfileComponent},
-
   ];
 
   /*

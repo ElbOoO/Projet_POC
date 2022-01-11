@@ -1,44 +1,36 @@
-<div>
-    <div class="container" *ngIf="!logged">
-        <div class="row">
-            <div class="col">
-                <div class="login_img">
-                </div>
+<div class="d-flex justify-content-center">
+    <div class="col-xl-10 col-md-10">
+        <div class="card user-card-full">
+            <div class="text-center">
+                <h1>Projet POC - TimeRGT</h1>
             </div>
-            <div class="col-4">
-
-                <div class="login_form">
-                    Log-in to your account
-                    <br><br>
-                    <input class="logipage__text" name="username" [(ngModel)]="username" type="text" placeholder="Enter your last name" />
-                    <br>
-                    <input class="logipage__text" name="password" [(ngModel)]="password" type="password" placeholder="Password" />
-                    <!-- <div class="login__ordiv">
-                        <div class="login__dividor"></div>
-                    </div>
-                    <div class="login_pass"> Forgot password?</div> -->
-                    <br><br>
- <!--                     <button class="login__button" onClick={this.login}>Log In</button> -->
-                 <button class="login__button" (click)="doLogin()">Log In</button>
-
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="login_form">
-                    Create your account
-                    <input class="logipage__text" type="text" placeholder="Enter your first name" />
-                    <input class="logipage__text" type="text" placeholder="Enter your last name" />
-                    <input class="logipage__text" type="password" placeholder="Enter your password" />
-                    <button class="login__button" onClick={this.newSignUp}>Sign up</button>
-                </div>
-            </div>
-            <div class="col">
-                <div class="login_img">
-                </div>
+            <hr>
+            <h3 class="d-flex justify-content-center">Authors</h3>
+            <div class="d-flex justify-content-around">
+                <p>BIRON Gregoire</p>
+                <p>GAGNAIRE Thomas</p>
+                <p>FELICIANO Ruben</p>
             </div>
         </div>
     </div>
 </div>
-<div id="deco">
-    <button class="login__button" (click)='deconnection()' *ngIf="logged" >Sign off</button>
+
+<div class="container">
+    <div class="login_form">
+        <div *ngIf="!logged">
+            <h3>Log-in to your account</h3>
+            <br>
+            <input class="logipage__text" name="username" [(ngModel)]="username" type="text"
+                placeholder="Enter your last name" />
+            <br>
+            <input class="logipage__text" name="password" [(ngModel)]="password" type="password"
+                placeholder="Password" />
+            <br><br>
+            <button class="login__button" (click)="doLogin()">Log In</button>
+        </div>
+        <div *ngIf="logged">
+            <h3>Logged as {{username}}</h3>
+            <button class="login__button" (click)="deconnection()">Sign off</button>
+        </div>
+    </div>
 </div>

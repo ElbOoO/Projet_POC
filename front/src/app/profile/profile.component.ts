@@ -34,14 +34,6 @@ export class ProfileComponent implements OnInit {
     });
   }
   //API --------------------------------------------------------------------
-
-  /*name : any="thog";
-  firstname : any="yeey";
-  role : any="user";
-  manager: any="moi";
-  password : any="tt";
-  passconfirm: any="tt";*/
-
   name : any;
   firstname : any;
   role : any;

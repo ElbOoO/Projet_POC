@@ -19,14 +19,6 @@ import { FormManagerComponent } from './form-manager/form-manager.component';
 import { ProfileComponent } from './profile/profile.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
-const routes: Routes =[
-  {path: '',redirectTo:'/home',pathMatch:'full'},
-  {path: 'home',component:LoginPageComponent},
-  {path: 'time',component:CalendarComponent},
-  {path: 'user',component:ProfileComponent},
-  ];
-
-
 @NgModule({
   declarations: [
     AppComponent,

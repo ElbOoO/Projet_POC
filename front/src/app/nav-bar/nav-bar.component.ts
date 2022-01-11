@@ -15,22 +15,17 @@ export class NavBarComponent implements OnInit {
   console.log(window.sessionStorage.getItem('access_token'))
   console.log(window.sessionStorage.getItem('role'))
     if(window.sessionStorage.getItem('role')!= null){
-
       this.logged =true
     }
     if(window.sessionStorage.getItem('role')== 'Manager'){
       this.manager =true
-      
     }
     if(this.logged==true && this.location.isCurrentPathEqualTo('/home')){
      // this.location.go('/time')
-     
     }
     if(this.logged==false){
-      this.location.go('/home')
-     
+      this.location.go('/home') 
     }
-
 
   }
   
