@@ -10,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,11 +46,11 @@ public class PersonneController {
 
 	@GetMapping(path = "/{id}", produces = "application/json")
 	@ResponseBody
-	public Personne getPersonneById(@PathVariable Integer id) {
+	public PersonneDTO getPersonneById(@PathVariable Integer id) {
 		Optional<Personne> p = this.personneService.findPersonne(id);
-		
+
 		if (!p.isEmpty()) {
-			return p.get();
+			return new PersonneDTO(p.get());
 		} else {
 			return null;
 		}
@@ -57,11 +58,13 @@ public class PersonneController {
 
 	@GetMapping(path = "/manager={id}", produces = "application/json")
 	@PreAuthorize("hasRole('Manager') or hasRole('Admin')")
-	public @ResponseBody Iterable<Personne> getPersonnesByManager(@PathVariable Integer id) {
+	public @ResponseBody Iterable<PersonneDTO> getPersonnesByManager(@PathVariable Integer id) {
 		Optional<Personne> manager = this.personneService.findPersonne(id);
+		ArrayList<PersonneDTO> result = new ArrayList<PersonneDTO>();
 
 		if (!manager.isEmpty()) {
-			return this.personneService.findPersonneByManager(manager.get());
+			this.personneService.findPersonneByManager(manager.get()).forEach(p -> result.add(new PersonneDTO(p)));
+			return result;
 		} else {
 			return null;
 		}
@@ -83,5 +86,17 @@ public class PersonneController {
 			return "This username is already taken";
 		}
 		return "Saved";
+	}
+
+	@DeleteMapping(path = "/{id}")
+	@PreAuthorize("hasRole('Admin')")
+	@ResponseBody
+	public String deletePersonne(@PathVariable Integer id) {
+		if (this.personneService.findPersonne(id).isPresent()) {
+			this.personneRepo.deleteById(id);
+			return "Personne supprimée";
+		} else {
+			return "Aucun utilisateur trouvé pour l'id " + id;
+		}
 	}
 }

@@ -8,12 +8,19 @@ public class PersonneDTO {
 	private String prenom;
 	private String nom;
 	private String role;
+	private Integer manager;
 
 	public PersonneDTO(Personne p) {
 		this.id = p.getId();
 		this.nom = p.getNom();
 		this.prenom = p.getPrenom();
 		this.role = p.getRole();
+
+		if (p.getManager() == null) {
+			this.manager = null;
+		} else {
+			this.manager = p.getManager().getId();
+		}
 	}
 
 	public Integer getId() {
@@ -47,4 +54,13 @@ public class PersonneDTO {
 	public void setRole(String role) {
 		this.role = role;
 	}
+
+	public Integer getManager() {
+		return manager;
+	}
+
+	public void setManager(Integer manager) {
+		this.manager = manager;
+	}
+
 }
