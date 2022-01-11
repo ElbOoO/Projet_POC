@@ -75,8 +75,9 @@ public class DBRunner implements CommandLineRunner {
 			tempsRepo.save(t3);
 
 			verrouRepo.save(verrou);
+			System.out.println("Base de données initialisée !");
 		} catch (DataIntegrityViolationException e) {
-			System.out.println("Cet utilisateur existe déjà");
+			System.out.println("Cet utilisateur existe déjà.");
 		}
 
 		System.out.println("--- Fin du runner ---");

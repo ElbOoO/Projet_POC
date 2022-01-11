@@ -20,7 +20,7 @@ public class VerrouillageTemps {
 	private Integer mois;
 	private Integer annee;
 
-	@ManyToOne(cascade = CascadeType.REFRESH)
+	@ManyToOne
 	private Personne utilisateur;
 
 	public VerrouillageTemps() {
