@@ -89,7 +89,7 @@ public class PersonneController {
 	}
 
 	@DeleteMapping(path = "/{id}")
-	@PreAuthorize("hasRole('Manager') or hasRole('Admin')")
+	@PreAuthorize("hasRole('Admin')")
 	@ResponseBody
 	public String deletePersonne(@PathVariable Integer id) {
 		if (this.personneService.findPersonne(id).isPresent()) {

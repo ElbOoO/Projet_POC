@@ -16,7 +16,6 @@ import fr.telecom.Poc.Repositories.PersonneRepository;
 import fr.telecom.Poc.Repositories.ProjetRepository;
 import fr.telecom.Poc.Repositories.TempsRepository;
 import fr.telecom.Poc.Repositories.VerrouillageTempsRepository;
-import fr.telecom.Poc.Services.VerrouillageTempsService;
 import fr.telecom.Poc.Services.ServicesImpl.VerrouillageTempsServiceImpl;
 
 @Component
