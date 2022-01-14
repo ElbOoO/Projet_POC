@@ -9,6 +9,16 @@ public class ProjetDTO {
 	private String couleur;
 	private Integer manager;
 
+	public ProjetDTO() {
+
+	}
+
+	public ProjetDTO(String nom, String couleur, Integer managerId) {
+		this.nom = nom;
+		this.couleur = couleur;
+		this.manager = managerId;
+	}
+
 	public ProjetDTO(Projet p) {
 		this.id = p.getId();
 		this.nom = p.getNom();

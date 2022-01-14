@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import fr.telecom.Poc.DTO.TempsDTO;
@@ -21,6 +21,7 @@ import fr.telecom.Poc.Models.Personne;
 import fr.telecom.Poc.Models.Projet;
 import fr.telecom.Poc.Models.Temps;
 import fr.telecom.Poc.Models.VerrouillageTemps;
+import fr.telecom.Poc.Payloads.Requests.ExportTempsRequest;
 import fr.telecom.Poc.Repositories.TempsRepository;
 import fr.telecom.Poc.Repositories.VerrouillageTempsRepository;
 import fr.telecom.Poc.Services.ServicesImpl.PersonneServiceImpl;
@@ -79,21 +80,23 @@ public class TempsController {
 
 	@GetMapping(path = "/export", produces = "application/json")
 	@ResponseBody
-	public Iterable<TempsDTO> exportTemps(@RequestParam Integer userId, @RequestParam Date date) {
-		Optional<Personne> user = personneService.findPersonne(userId);
+	public Iterable<TempsDTO> exportTemps(@RequestBody ExportTempsRequest request) {
+		Optional<Personne> user = personneService.findPersonne(request.getUtilisateur());
 		ArrayList<TempsDTO> result = new ArrayList<TempsDTO>();
 
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
+		cal.setTime(request.getDate());
 
 		if (user.isEmpty()) {
-			System.out.println("Erreur : l'utilisateur avec l'id " + userId + " n'existe pas dans la base de donnees.");
+			System.out.println("Erreur : l'utilisateur avec l'id " + request.getUtilisateur()
+					+ " n'existe pas dans la base de donnees.");
 			return null;
 		}
 
 		try {
 			verrouRepo.save(new VerrouillageTemps(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR), user.get()));
-			tempsService.exportTempsUtilisateur(user.get(), date).forEach(temps -> result.add(new TempsDTO(temps)));
+			tempsService.exportTempsUtilisateur(user.get(), request.getDate())
+					.forEach(temps -> result.add(new TempsDTO(temps)));
 		} catch (DataIntegrityViolationException e) {
 			// Si ce verrou existe deja
 			System.out.println("Erreur : Les temps recherches ont deja ete exportes.");
@@ -105,28 +108,28 @@ public class TempsController {
 
 	@PostMapping
 	@ResponseBody
-	public String addTemps(@RequestParam Date date, @RequestParam Double poids, @RequestParam Integer utilisateurId,
-			@RequestParam Integer projetId) {
-		Optional<Personne> utilisateur = this.personneService.findPersonne(utilisateurId);
-		Optional<Projet> projet = this.projetService.findProjet(projetId);
+	public String addTemps(@RequestBody TempsDTO nouveauTemps) {
+		Optional<Personne> utilisateur = this.personneService.findPersonne(nouveauTemps.getUtilisateur());
+		Optional<Projet> projet = this.projetService.findProjet(nouveauTemps.getProjet());
 
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
+		cal.setTime(nouveauTemps.getDate());
 
 		if (!projet.isEmpty() && !utilisateur.isEmpty()) {
 
 			if (!verrouService.isLocked(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR), utilisateur.get())) {
-				this.tempsRepo.save(new Temps(date, poids, utilisateur.get(), projet.get()));
+				this.tempsRepo.save(
+						new Temps(nouveauTemps.getDate(), nouveauTemps.getPoids(), utilisateur.get(), projet.get()));
 				return "Saved.";
 			} else {
-				return ("Erreur : Impossible d'ajouter un temps a cette date " + date
+				return ("Erreur : Impossible d'ajouter un temps a cette date " + nouveauTemps.getDate()
 						+ " : ce mois a deja ete exporte");
 			}
 
 		} else if (projet.isEmpty()) {
-			return "Error : Cannot find a Projet with the id: " + projetId;
+			return "Error : Cannot find a Projet with the id: " + nouveauTemps.getProjet();
 		} else {
-			return "Error : Cannot find a Personne with the id: " + utilisateurId;
+			return "Error : Cannot find a Personne with the id: " + nouveauTemps.getUtilisateur();
 		}
 	}
 
