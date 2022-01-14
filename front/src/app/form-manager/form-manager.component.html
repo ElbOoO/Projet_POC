@@ -14,13 +14,13 @@
         <div class="popup">
             <div id="form">
                 <p>Nom du projet :</p>
-                <input id="name-proj" type="text" [(ngModel)]="projectName" />
+                <input id="name-proj" type="text" [(ngModel)]="inputName" />
                 <p>Couleur du projet :</p>
                 <input ejs-colorpicker type="color" class="form-control" id="colorpicker" name="colorpicker"
-                    [(ngModel)]="projectColor" />
+                    [(ngModel)]="inputColor" />
             </div>
             <div class="d-flex justify-content-between">
-                <button class="btn btn-success" (click)="addproject(projectName,projectColor)"
+                <button class="btn btn-success" (click)="addproject(inputName,inputColor)"
                     (click)="popupAddProject = false">
                     Créer </button>
                 <button class="btn btn-danger" (click)="popupAddProject = false">Cancel</button>
@@ -48,7 +48,6 @@
                         <td>
                             <input ejs-colorpicker type="color" class="form-control" id="colorpicker" name="colorpicker"
                                 [(ngModel)]="project.couleur" disabled=true>
-                            <!--{{project.couleur}}-->
                         </td>
                         <td>
                             <button class="btn btn-danger" (click)="removeItem(i)">

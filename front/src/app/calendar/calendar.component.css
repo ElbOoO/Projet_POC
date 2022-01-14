@@ -1,11 +1,13 @@
 .calendar {
   width: 90%;
-  height: 100%;
   margin-left: 5%;
   margin-top: 20px;
 }
 .table-responsive {
   width: 90%;
+}
+#test {
+  max-height: 30%;
 }
 .btn-group {
   width: 20%;
@@ -15,6 +17,8 @@
 
 .calendarpage {
   margin-top: 2%;
+  margin-left: 5%;
+  margin-right: 5%;
 }
 
 .overlay {

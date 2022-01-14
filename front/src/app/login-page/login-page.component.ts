@@ -2,14 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { RestapiService } from '../restapi.service';
 import { TokenStorageService } from '../token-storage.service';
 
-interface responseauth {
-id:number
-username:string
-roles:Array<1>
-access_token:string
-token_type:string
-}
-
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.component.html',
@@ -17,17 +9,16 @@ token_type:string
 })
 export class LoginPageComponent implements OnInit {
 
-  username:string='';
-  password:string='';
-  message:any;
-  //response: responseauth;
-
   constructor(private service:RestapiService,private tokenservice:TokenStorageService) { }
   ngOnInit(): void {
     if(window.sessionStorage.getItem('role')!= null){
       this.logged =true
     }
   }
+
+  username:string='Gregoire.Biron';
+  password:string='azerty';
+  message:any;
 
   doLogin(): string {
   let resp= this.service.login(this.username,this.password);
@@ -41,6 +32,7 @@ export class LoginPageComponent implements OnInit {
       window.sessionStorage.setItem('role',data.roles)
       console.log(window.sessionStorage.getItem('role'))
       window.location.reload();
+      
     // window.sessionStorage.setItem("auth-token",data.access_token)
     })
   return ''
