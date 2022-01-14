@@ -1,47 +1,45 @@
-<div class="calendarpage">
-    <div class="row text-center">
+<div class="calendarpage d-flex justify-content-between">
+    <div>
         <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
     </div>
-
-    <div [ngSwitch]="CalendarView.Week" class="calendar">
-        <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events"
-            [hourSegments]="1" [dayEndHour]="7" [hourSegmentHeight]="45" [weekStartsOn]="1" [refresh]="refresh">
-        </mwl-calendar-week-view>
-    </div>
-
     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-        <div class="btn-group ">
-            <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate">
-                Previous
-            </div>
-            <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">
-                Today
-            </div>
-            <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate">
-                Next
-            </div>
+        <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate">
+            Previous
         </div>
-        <div class="btn-group" role="group" aria-label="Third group">
-            <button class="btn btn-success" (click)="popupAddTime = true">Add New Time</button>
-            <button class="btn btn-warning" (click)="popupExportPDF = true">Export to PDF</button>
+        <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">
+            Today
+        </div>
+        <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate">
+            Next
         </div>
     </div>
 </div>
+
+<div [ngSwitch]="CalendarView.Week" class="calendar">
+    <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events" [hourSegments]="1"
+        [dayEndHour]="7" [hourSegmentHeight]="45" [weekStartsOn]="1">
+    </mwl-calendar-week-view>
+</div>
+<div class="btn-group" role="group" aria-label="Third group">
+    <button class="btn btn-success" (click)="popupAddTime = true">Add New Time</button>
+    <button class="btn btn-warning" (click)="popupExportPDF = true">Export to PDF</button>
+</div>
+<hr>
 
 <div class="overlay" *ngIf="popupAddTime" onLoad="this.focus()">
     <div class="popup">
         <h2>New Event</h2>
         <p>Select your project</p>
-        <ng-select [items]="projectsList" bindValue="name" bindLabel="name" placeholder="Select project"
-            [(ngModel)]="selectedProject">
+        <ng-select [items]="projectsListName" bindValue="name" bindLabel="name" placeholder="Select project"
+            [(ngModel)]="inputProject">
         </ng-select>
         <p>Select your date</p>
-        <input type="date" name="date" placeholder="AAAA-MM-DD" [(ngModel)]="selectedDate">
+        <input type="date" name="date" placeholder="AAAA-MM-DD" [(ngModel)]="inputDate">
         <p>Select your time</p>
-        <ng-select [items]="times" bindValue="time" bindLabel="time" placeholder="Select time"
-            [(ngModel)]="selectedTime"></ng-select>
+        <ng-select [items]="times" bindValue="time" bindLabel="time" placeholder="Select time" [(ngModel)]="inputTime">
+        </ng-select>
         <div class="d-flex justify-content-between">
-            <button class="btn btn-success" (click)="addEvent(selectedProject,selectedDate,selectedTime)"
+            <button class="btn btn-success" (click)="postEvent(inputProject,inputDate,inputTime)"
                 (click)="popupAddTime = false">Confirm</button>
             <button class="btn btn-danger" (click)="popupAddTime = false">Cancel</button>
         </div>
@@ -57,7 +55,7 @@
         <p>Select ending date</p>
         <input type="date" name="date" placeholder="AAAA-MM-DD" [(ngModel)]="PDF_endingDate">
         <div class="d-flex justify-content-between">
-            <button class="btn btn-success" (click)="createPdf(PDF_startingDate,PDF_endingDate)"
+            <button class="btn btn-success" (click)="convert(PDF_startingDate,PDF_endingDate)"
                 (click)="popupExportPDF = false">
                 PDF </button>
             <button class="btn btn-danger" (click)="popupExportPDF = false">Cancel</button>
@@ -65,8 +63,7 @@
     </div>
 </div>
 
-<br /><br /><br />
-<div class="d-flex justify-content-center">
+<div id="test" class="d-flex justify-content-center">
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
@@ -78,7 +75,7 @@
             </thead>
 
             <tbody>
-                <tr *ngFor="let event of events">
+                <tr *ngFor="let event of events; let i = index">
                     <td>
                         <p class="form-control">{{event.title}}</p>
                     </td>
@@ -86,7 +83,7 @@
                         <p class="form-control">{{event.start}}</p>
                     </td>
                     <td>
-                        <button class="btn btn-danger" (click)="deleteEvent(event)">
+                        <button class="btn btn-danger" (click)="deleteEvent(event,i)">
                             Delete
                         </button>
                     </td>

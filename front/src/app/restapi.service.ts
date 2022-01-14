@@ -13,90 +13,84 @@ const AUTH_API = 'http://localhost:8080/auth/';
 })
 export class RestapiService {
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient) {}  
 
-    /*public loginn(username:string,password:string){
-      const headers= new HttpHeaders({Authorization: 'Basic '+ btoa(username+":"+password)})
-      const body = '{"username": "' + username + '", "password": "' + password + '"}';
-      return this.http.post("http://localhost:8080/auth/login",body)
+  login(username:string,password:string) {
+    return this.http.post<login>(AUTH_API + 'login', {
+      username: username,
+      password: password
+    }, httpOptions);
+  }
+  // Gestion des Temps par l'API----------------------------------------------------------------------------
+  public getTemps(id:number){
+    let tokenParse = window.sessionStorage.getItem('access_token') || '{}'           
+    let header = {
+      headers: new HttpHeaders({ 'Authorization': 'Bearer '+ tokenParse ,responseType:'text' as 'json'})
+    };
+    return this.http.get<Temps[]>('http://localhost:8080/' +'temps/utilisateur='+id.toString(),header)
+  }
 
-      
-      
-      //return this.http.post("http://localhost:8080/auth/login",{headers,responseType:'text' as'json'})
+  public postTemps(date:string,poids:number,user_id:number,project_id:number){
+    let tokenParse = window.sessionStorage.getItem('access_token') || '{}'           
+    let header = {
+      headers: new HttpHeaders({ 'Authorization': 'Bearer '+ tokenParse ,responseType:'text' as 'json'})
+    };
+    const body = {"date": date,"poids": poids,"utilisateur": user_id,"projet": project_id}
+    return this.http.post<Temps>('http://localhost:8080/' +'temps',body,header)
+  }
 
-    }*/
-    
-    login(username:string,password:string) {
-      return this.http.post<login>(AUTH_API + 'login', {
-        username: username,
-        password: password
-      }, httpOptions);
-    }
+  public deleteTemps(_id:number){
+    let tokenParse = window.sessionStorage.getItem('access_token') || '{}'           
+    let header = {
+      headers: new HttpHeaders({ 'Authorization': 'Bearer '+ tokenParse ,responseType:'text' as 'json'})
+    };
 
-
-
-    public post_temps(date:string,poids:string,user_id:string,project_id:string){
-
-      let token = window.sessionStorage.getItem('access_token') 
-      let headers= new HttpHeaders()
-      console.log(window.sessionStorage.getItem('access_token') || '{}') 
-      let tokenParse = window.sessionStorage.getItem('access_token') || '{}'           
-      headers.append('Authorization', `Bearer ${tokenParse}`);
-      
-      let httpopt = {
-        headers: new HttpHeaders({ 'Authorization': 'Bearer '+ tokenParse ,responseType:'text' as 'json'})
-      };
+    return this.http.delete<Temps>('http://localhost:8080/' +'temps/'+_id.toString(),header)
+  }
 
 
-      const body ={'date':'2022-01-08','poids':'0.5','utilisateurId':'4','projetId':'2' }
+  // Gestion des Projets par l'API----------------------------------------------------------------------------
+  public getProject(){
+    let tokenParse = window.sessionStorage.getItem('access_token') || '{}'                 
+    let header = {
+      headers: new HttpHeaders({ 'Authorization': 'Bearer '+ tokenParse ,responseType:'text' as 'json'})
+    };
 
-      
-      return this.http.post<Error>('http://localhost:8080/' +'temps',body,httpopt)
+    return this.http.get<Projet[]>('http://localhost:8080/' +'projets',header)
+  }
 
-    }
+  public postProject(_couleur:string,_nom:string,_manager_id:number){
+    let tokenParse = window.sessionStorage.getItem('access_token') || '{}'           
+    let header = {
+      headers: new HttpHeaders({ 'Authorization': 'Bearer '+ tokenParse ,responseType:'text' as 'json'})
+    };
 
-    public getProject(){
-     
-      let token = window.sessionStorage.getItem('access_token') 
-      let headers= new HttpHeaders()
-      console.log(window.sessionStorage.getItem('access_token') || '{}') 
-      let tokenParse = window.sessionStorage.getItem('access_token') || '{}'           
-      headers.append('Authorization', `Bearer ${tokenParse}`);
-      
-      let httpopt = {
-        headers: new HttpHeaders({ 'Authorization': 'Bearer '+ tokenParse ,responseType:'text' as 'json'})
-      };
-      return this.http.get<Projet[]>('http://localhost:8080/' +'projets',httpopt)
+    const body ={'id':1,'couleur':_couleur,'nom':_nom,'manager':_manager_id}
+    return this.http.post<Projet>('http://localhost:8080/' +'projets',body,header)
+  }
+  
+  public deleteProject(_id:number){
+    let tokenParse = window.sessionStorage.getItem('access_token') || '{}'           
+    let header = {
+      headers: new HttpHeaders({ 'Authorization': 'Bearer '+ tokenParse ,responseType:'text' as 'json'})
+    };
 
-    }
-
-    public getTemps(id:number){
-      
-      let token = window.sessionStorage.getItem('access_token') 
-      let headers= new HttpHeaders()
-      console.log(window.sessionStorage.getItem('access_token') || '{}') 
-      let tokenParse = window.sessionStorage.getItem('access_token') || '{}'           
-      headers.append('Authorization', `Bearer ${tokenParse}`);
-      
-      let httpopt = {
-        headers: new HttpHeaders({ 'Authorization': 'Bearer '+ tokenParse ,responseType:'text' as 'json'})
-      };
-      return this.http.get<Temps[]>('http://localhost:8080/' +'temps/utilisateur='+id.toString(),httpopt)
-
-    }
+    return this.http.delete<Projet>('http://localhost:8080/' +'projets/'+_id.toString(),header)
+  }
 
 }
 
 interface login{
-roles:string  
-access_token:string
-
+  username:string,
+  roles:string  
+  access_token:string
 }
 
 interface Temps{
+  id:number;
   date: string;
   poids: number;
-  //projet_id:string;
+  projet:Projet;
 
 }
 
@@ -120,12 +114,8 @@ prenom:string
 password:string
 role:string
 username:string
-//'#0000ff'
-
 }
 
 interface Error{
 error:string
-
-
 }

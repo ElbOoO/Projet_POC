@@ -1,5 +1,6 @@
 package fr.telecom.Poc.Services.ServicesImpl;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +17,7 @@ public class TempsServiceImpl implements TempsService {
 
 	@Autowired
 	TempsRepository tempsRepo;
-	
+
 	@Override
 	public List<Temps> findAllTemps() {
 		return tempsRepo.findAll();
@@ -30,6 +31,11 @@ public class TempsServiceImpl implements TempsService {
 	@Override
 	public List<Temps> findByUtilisateur(Personne utilisateur) {
 		return this.tempsRepo.findByUtilisateur(utilisateur);
+	}
+
+	@Override
+	public List<Temps> exportTempsUtilisateur(Personne utilisateur, Date date) {
+		return this.tempsRepo.findByUtilisateurForMonth(utilisateur.getId(), date);
 	}
 
 }

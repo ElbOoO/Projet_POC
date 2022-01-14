@@ -17,7 +17,7 @@ export class NavBarComponent implements OnInit {
     if(window.sessionStorage.getItem('role')!= null){
       this.logged =true
     }
-    if(window.sessionStorage.getItem('role')== 'Manager'){
+    if(window.sessionStorage.getItem('role')== 'ROLE_Manager'){
       this.manager =true
     }
     if(this.logged==true && this.location.isCurrentPathEqualTo('/home')){

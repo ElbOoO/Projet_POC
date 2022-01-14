@@ -7,8 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import fr.telecom.Poc.Models.Personne;
 import fr.telecom.Poc.Models.Temps;
+import fr.telecom.Poc.Repositories.Custom.CustomTempsRepository;
 
 @Repository
-public interface TempsRepository extends JpaRepository<Temps, Integer> {
+public interface TempsRepository extends CustomTempsRepository, JpaRepository<Temps, Integer> {
 	public List<Temps> findByUtilisateur(Personne utilisateur);
 }

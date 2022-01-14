@@ -1,10 +1,14 @@
 package fr.telecom.Poc.Models;
 
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -20,9 +24,18 @@ public class Personne {
 	private String password;
 	private String role;
 
-	@ManyToOne(cascade = CascadeType.REFRESH)
+	@ManyToOne
 	private Personne manager;
+	
+	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "utilisateur", fetch = FetchType.LAZY, orphanRemoval = true)
+	private Set<VerrouillageTemps> verrous;
+	
+	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "utilisateur", fetch = FetchType.LAZY, orphanRemoval = true)
+	private Set<Temps> temps;
 
+	@OneToMany(cascade = CascadeType.DETACH, mappedBy = "manager", fetch = FetchType.LAZY, orphanRemoval = true)
+	private Set<Projet> projets;
+	
 	public Personne() {
 	}
 

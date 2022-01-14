@@ -1,10 +1,14 @@
 package fr.telecom.Poc.Models;
 
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Projet {
@@ -14,15 +18,21 @@ public class Projet {
 
 	private String nom;
 
-	@ManyToOne(cascade = CascadeType.REFRESH)
+	private String couleur;
+
+	@ManyToOne
 	private Personne manager;
+	
+	@OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "projet", fetch = FetchType.LAZY)
+	private Set<Temps> temps;
 
 	public Projet() {
 
 	}
 
-	public Projet(String nom, Personne manager) {
+	public Projet(String nom, String couleur, Personne manager) {
 		this.nom = nom;
+		this.couleur = couleur;
 		this.manager = manager;
 	}
 
@@ -48,5 +58,13 @@ public class Projet {
 
 	public void setManager(Personne manager) {
 		this.manager = manager;
+	}
+
+	public String getCouleur() {
+		return couleur;
+	}
+
+	public void setCouleur(String couleur) {
+		this.couleur = couleur;
 	}
 }

@@ -1,9 +1,7 @@
-import { Component, NgProbeToken, OnInit } from '@angular/core';
-import { CalendarView, CalendarEvent, CalendarEventTimesChangedEvent } from 'angular-calendar';//https://mattlewis92.github.io/angular-calendar/docs/components/CalendarWeekViewComponent.html DOC
+import { Component, OnInit } from '@angular/core';
+import { CalendarView, CalendarEvent } from 'angular-calendar';//https://mattlewis92.github.io/angular-calendar/docs/components/CalendarWeekViewComponent.html DOC
 import { startOfDay } from 'date-fns';
-import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
 
 import jspdf from 'jspdf';
 import 'jspdf-autotable';
@@ -14,80 +12,29 @@ import { RestapiService } from '../restapi.service';
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
 })
+
+
 export class CalendarComponent implements OnInit {
   constructor(private httpClient: HttpClient,private service:RestapiService) {}
-
   ngOnInit(){
-    this.getEvents();
     this.getEventsfromapi();
-    //test sans API----------------------------------
-    this.PDF_userDateList.push(new Date("2021-12-12"))
-    this.PDF_userDateList.push(new Date("2022-01-02"))
-    this.PDF_userDateList.push(new Date("2022-01-04"))
-    this.PDF_userDateList.push(new Date("2022-01-06"))
   }
 
-  //API functions ----------------------------------------------------------
-  apiURL: string = 'https://jsonplaceholder.typicode.com/posts';
-  public getApiData(url?: string){   
-
-    return this.httpClient.get<any>(`${this.apiURL}`,
-    { observe: 'response' }).pipe(tap(res => {
-      return res;
-    }));
-  }
-
-  getEventsfromapi(){
-
-  this.service.getTemps(2).subscribe(data=> {
-
-    console.log(data)
-    //console.log(data.projet_id)
-    //console.log(data.date)
-    //console.log(data.poids)
-    for (let i = 0; i < data.length/*res.body.length*/; i++) {
-      this.initEvent("default",data[i].date,data[i].poids)
-    }
-  })
-  
-  
-  }
-  
-  posttempsapi(projet: string,date: string,time: any){
-    console.log(date)
-    console.log(time)
-
-    this.service.post_temps(date,time,'1','1').subscribe(data=>{
-
-      console.log(data.error)
-    })
-    
-      }
-  getEvents() {
-    this.getApiData().subscribe(res => { 
-      for (let i = 0; i < 4/*res.body.length*/; i++) {
-        this.projectsList.push(res.body[i].title);// GET: list des projets
-        this.initEvent(res.body[i].title,"2021-12-24","0.5"/*,'#00FF00'*/); // GET : infos sur temps
-        //Lists pour creation PDF
-        this.PDF_userProjectsList.push(res.body[i].title)
-        //this.PDF_userDateList.push(new Date())
-        this.PDF_userWeightList.push("0.5")
-      }
-    });
-  }
-  //-------------------------------------------------------------------------
-
+  myuser=1; //TODO : changer par l'utilisateur actuel
   popupAddTime = false
   popupExportPDF = false;
-  selectedProject: any;
-  selectedTime: any;
-  selectedDate : any;
+  inputProject: any;
+  inputTime: any;
+  inputDate : any;
   viewDate: Date = new Date();
   view: CalendarView = CalendarView.Week;
   CalendarView = CalendarView;
-  refresh = new Subject<void>();
   events: CalendarEvent[] = []
-  projectsList:any =[];
+  projectsListName:any=[];
+  projectsListId:any=[];
+  tempsListId:any=[];
+
+  PdfData:any= []
   times = [
     {time: 0.125},
     {time: 0.25},
@@ -99,84 +46,106 @@ export class CalendarComponent implements OnInit {
     {time: 1}
   ];
 
-  refreshView(): void {
-    this.refresh.next();
+  //API functions ----------------------------------------------------------
+  getEventsfromapi(){
+    this.service.getProject().subscribe(data=> {// GET: list des projets
+      for (let i = 0; i < data.length; i++) {
+        this.projectsListName.push(data[i].nom);
+        this.projectsListId.push(data[i].id);
+      }
+    })
+
+  this.service.getTemps(this.myuser).subscribe(data=> {// GET: list des temps
+    for (let i = 0; i < data.length; i++) {
+      this.initEvent(data[i].projet.nom,data[i].date,data[i].poids,data[i].projet.couleur)
+      this.tempsListId.push(data[i].id);
+      this.PdfData.push({nom:data[i].projet.nom,date:data[i].date,poids:data[i].poids});
+    }
+  })
+  
   }
-  setView(view: CalendarView) {
-    this.view = view;
-    this.refresh.next();
-  }
-  initEvent(projet: string,date: string,time: any,/*color:any*/): void {
-    this.events = [
-      ...this.events,
-      {
-        title: projet /*+"\n Poids :"+ time*/,
-        start: startOfDay(new Date(date)),
-        end: addDate(new Date(date),time),
-        /*color:  {
-          primary: '#FFFFFF',
-          secondary: color,
-        },*/
-      },
-    ];
+  ApiPostTemps(date:string,poids:number,user_id:number,project_id:number){
+    this.service.postTemps(date,poids,user_id,project_id).subscribe(data=>{
+    })
   }
 
-  addEvent(projet: string,date: string,time: any): void {
+  ApiDeleteTemps(id:number){
+    this.service.deleteTemps(id).subscribe(data=>{
+    })
+  }
+  //-------------------------------------------------------------------------
+
+  //Calendar functions ------------------------------------------------------
+
+  getProjectId(projet:string){
+    for (let i = 0; i < this.projectsListName.length; i++) {
+      if (this.projectsListName[i]==projet){
+        return this.projectsListId[i];
+      }
+    }
+  }
+
+  getEventId(index:number){
+    return this.tempsListId[index];
+  }
+
+  initEvent(projet: string,date: string,time: any,color:any): void {
     this.events = [
       ...this.events,
       {
         title: projet,
         start: startOfDay(new Date(date)),
         end: addDate(new Date(date),time),
+        color:  {
+          primary: '#FFFFFF',
+          secondary: color,
+        },
       },
     ];
-    this.posttempsapi(projet,date,time)
-    
-    //perform post & f5
   }
 
-  deleteEvent(eventToDelete: CalendarEvent) {
-    this.events = this.events.filter((event) => event !== eventToDelete);
-    //perform delete & f5
+  postEvent(projet: string,date: string,time: any): void {
+    this.ApiPostTemps(date,time,this.myuser,this.getProjectId(projet));
+    window.location.reload();
   }
-  //Gestion PDF-------------------------------------------------------------------------
-  //TODO verouiiler les temps exportés
-  PDF_userProjectsList:any = []
-  PDF_userDateList:any = []
-  PDF_userWeightList:any = []
+
+  deleteEvent(eventToDelete: CalendarEvent,index:number) {
+    this.ApiDeleteTemps(this.getEventId(index));
+    this.events = this.events.filter((event) => event !== eventToDelete);
+    window.location.reload();
+  }
+
+  //-------------------------------------------------------------------------
+
+  //Gestion PDF--------------------------------------------------------------
   PDF_startingDate: any;
   PDF_endingDate: any;
-  createPdf(startingDate:Date,endingDate:Date) { //HELP : https://www.freakyjolly.com/angular-jspdf-autotable-tutorial/
-    var PDF_head = [['Project','Time','Weight']];
-    var PDF_body=[];
-    var PDF_total = [];
-    var doc = new jspdf();
-    PDF_total=concatenateTab([],this.PDF_userProjectsList,this.PDF_userDateList,this.PDF_userWeightList)
-    for (let i = 0; i < this.PDF_userDateList.length; i++) {
-      if (PDF_total[i][1]>=new Date(startingDate) && PDF_total[i][1]<=new Date(endingDate)){
-        PDF_body.push(PDF_total[i]);
-      }
-    }
 
+  convert(startingDate:Date,endingDate:Date) {
+    var doc = new jspdf();
+    var PDF_head = [['Project','Time','Weight']];
+    var PDF_body:any=[];
+
+    this.PdfData.forEach((element: { nom: any; date: any; poids: any; }) => {      
+      var temp = [element.nom,element.date,element.poids];
+      if (new Date(element.date)>=new Date(startingDate) && new Date(element.date)<=new Date(endingDate)){
+        PDF_body.push(temp);
+      }
+    });        
     (doc as any).autoTable({
       head: PDF_head,
       body: PDF_body,
       theme: 'grid', //striped,plain,grid
     })
-    doc.output('dataurlnewwindow'); // Open PDF document in new tab
+    // doc.save('Test.pdf');
+    doc.output('dataurlnewwindow');
   }
-  //--------------------------------------------------------------------------------------
-}
+  //-------------------------------------------------------------------------
 
+
+}
 
 function addDate(date: Date, hour: any) {
   date.setTime(date.getTime() + ((hour*8-1)*60*60000));
   return date;
-}
-
-function concatenateTab(finalTab:any,tab1:any,tab2:any,tab3:any){
-  for (let i = 0; i < tab1.length; i++) {
-    finalTab.push([tab1[i],tab2[i],tab3[i]])
-  }
-  return finalTab;
 }
