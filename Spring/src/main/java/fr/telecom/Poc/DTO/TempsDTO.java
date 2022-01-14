@@ -11,6 +11,13 @@ public class TempsDTO {
 	private Integer utilisateur;
 	private Integer projet;
 
+	public TempsDTO(Date date, Double poids, Integer utilisateur, Integer projet) {
+		this.date = date;
+		this.poids = poids;
+		this.utilisateur = utilisateur;
+		this.projet = projet;
+	}
+
 	public TempsDTO(Temps t) {
 		this.id = t.getId();
 		this.date = t.getDate();
