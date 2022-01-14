@@ -8,22 +8,15 @@ public class TempsDTO {
 	private Integer id;
 	private Date date;
 	private Double poids;
-	private Integer utilisateur;
-	private Integer projet;
-
-	public TempsDTO(Date date, Double poids, Integer utilisateur, Integer projet) {
-		this.date = date;
-		this.poids = poids;
-		this.utilisateur = utilisateur;
-		this.projet = projet;
-	}
+	private PersonneDTO utilisateur;
+	private ProjetDTO projet;
 
 	public TempsDTO(Temps t) {
 		this.id = t.getId();
 		this.date = t.getDate();
 		this.poids = t.getPoids();
-		this.utilisateur = t.getUtilisateur().getId();
-		this.projet = t.getProjet().getId();
+		this.utilisateur = new PersonneDTO(t.getUtilisateur());
+		this.projet = new ProjetDTO(t.getProjet());
 	}
 
 	public Integer getId() {
@@ -50,19 +43,19 @@ public class TempsDTO {
 		this.poids = poids;
 	}
 
-	public Integer getUtilisateur() {
+	public PersonneDTO getUtilisateur() {
 		return utilisateur;
 	}
 
-	public void setUtilisateur(Integer utilisateur) {
+	public void setUtilisateur(PersonneDTO utilisateur) {
 		this.utilisateur = utilisateur;
 	}
 
-	public Integer getProjet() {
+	public ProjetDTO getProjet() {
 		return projet;
 	}
 
-	public void setProjet(Integer projet) {
+	public void setProjet(ProjetDTO projet) {
 		this.projet = projet;
 	}
 

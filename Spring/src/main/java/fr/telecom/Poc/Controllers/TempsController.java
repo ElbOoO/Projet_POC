@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,7 @@ import fr.telecom.Poc.Models.Projet;
 import fr.telecom.Poc.Models.Temps;
 import fr.telecom.Poc.Models.VerrouillageTemps;
 import fr.telecom.Poc.Payloads.Requests.ExportTempsRequest;
+import fr.telecom.Poc.Payloads.Requests.TempsRequest;
 import fr.telecom.Poc.Repositories.TempsRepository;
 import fr.telecom.Poc.Repositories.VerrouillageTempsRepository;
 import fr.telecom.Poc.Services.ServicesImpl.PersonneServiceImpl;
@@ -48,8 +51,10 @@ public class TempsController {
 
 	@GetMapping(produces = "application/json")
 	@ResponseBody
-	public Iterable<Temps> getAllTemps() {
-		return this.tempsService.findAllTemps();
+	public Iterable<TempsDTO> getAllTemps() {
+		ArrayList<TempsDTO> result = new ArrayList<TempsDTO>();
+		this.tempsService.findAllTemps().forEach(temps -> result.add(new TempsDTO(temps)));
+		return result;
 	}
 
 	@GetMapping(path = "/{id}", produces = "application/json")
@@ -108,7 +113,7 @@ public class TempsController {
 
 	@PostMapping
 	@ResponseBody
-	public String addTemps(@RequestBody TempsDTO nouveauTemps) {
+	public String addTemps(@RequestBody TempsRequest nouveauTemps) {
 		Optional<Personne> utilisateur = this.personneService.findPersonne(nouveauTemps.getUtilisateur());
 		Optional<Projet> projet = this.projetService.findProjet(nouveauTemps.getProjet());
 
