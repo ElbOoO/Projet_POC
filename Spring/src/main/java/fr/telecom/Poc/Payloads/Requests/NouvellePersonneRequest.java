@@ -1,16 +1,27 @@
 package fr.telecom.Poc.Payloads.Requests;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class NouvellePersonneRequest {
+	@NotNull
+	@NotBlank
 	private String nom;
+	@NotNull
+	@NotBlank
 	private String prenom;
+	@NotNull
+	@NotBlank
 	private String password;
+	@NotNull
+	@NotBlank
 	private String role;
 	private Integer manager;
 
 	public NouvellePersonneRequest() {
-		
+
 	}
-	
+
 	public NouvellePersonneRequest(String nom, String prenom, String password, String role) {
 		this.nom = nom;
 		this.prenom = prenom;
