@@ -7,6 +7,10 @@ public class NouvellePersonneRequest {
 	private String role;
 	private Integer manager;
 
+	public NouvellePersonneRequest() {
+		
+	}
+	
 	public NouvellePersonneRequest(String nom, String prenom, String password, String role) {
 		this.nom = nom;
 		this.prenom = prenom;
