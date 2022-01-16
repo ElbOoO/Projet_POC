@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +22,7 @@ import fr.telecom.Poc.Models.Personne;
 import fr.telecom.Poc.Payloads.Requests.NouvellePersonneRequest;
 import fr.telecom.Poc.Repositories.PersonneRepository;
 import fr.telecom.Poc.Services.ServicesImpl.PersonneServiceImpl;
+import fr.telecom.Poc.Utils.ListeRoles;
 
 @Controller
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -32,6 +34,9 @@ public class PersonneController {
 
 	@Autowired
 	private PersonneServiceImpl personneService;
+
+	@Autowired
+	PasswordEncoder encoder;
 
 	@GetMapping(produces = "application/json")
 	@PreAuthorize("hasRole('Manager') or hasRole('Admin')")
@@ -73,17 +78,22 @@ public class PersonneController {
 	@PreAuthorize("hasRole('Manager') or hasRole('Admin')")
 	public @ResponseBody String addNewPersonne(@RequestBody NouvellePersonneRequest nouvellePersonne) {
 		Personne p = new Personne(nouvellePersonne.getNom(), nouvellePersonne.getPrenom(),
-				nouvellePersonne.getPassword(), nouvellePersonne.getRole());
+				encoder.encode(nouvellePersonne.getPassword()), nouvellePersonne.getRole());
 		if (nouvellePersonne.getManager() != null) {
 			p.setManager(this.personneService.findPersonne(nouvellePersonne.getManager()).get());
+		}
+
+		if (!ListeRoles.isPresent(nouvellePersonne.getRole())) {
+			return "Erreur : Ce rôle n'est pas valide";
 		}
 
 		try {
 			this.personneRepo.save(p);
 		} catch (DataIntegrityViolationException e) {
-			return "This username is already taken";
+			return "Erreur : l'utilisateur " + nouvellePersonne.getPrenom() + " " + nouvellePersonne.getNom()
+					+ " existe deja.";
 		}
-		return "Saved";
+		return "Nouvel utilisateur sauvegarde !";
 	}
 
 	@DeleteMapping(path = "/{id}")

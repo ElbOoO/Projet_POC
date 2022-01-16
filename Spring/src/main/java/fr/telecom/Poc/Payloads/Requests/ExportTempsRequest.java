@@ -6,6 +6,10 @@ public class ExportTempsRequest {
 	private Integer utilisateur;
 	private Date date;
 
+	public ExportTempsRequest() {
+
+	}
+
 	public ExportTempsRequest(Integer utilisateur, Date date) {
 		this.utilisateur = utilisateur;
 		this.date = date;
