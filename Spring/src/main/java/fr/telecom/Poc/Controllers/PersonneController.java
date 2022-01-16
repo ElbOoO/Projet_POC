@@ -5,12 +5,15 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import fr.telecom.Poc.DTO.PersonneDTO;
 import fr.telecom.Poc.Models.Personne;
 import fr.telecom.Poc.Payloads.Requests.NouvellePersonneRequest;
+import fr.telecom.Poc.Payloads.Requests.PatchPersonneRequest;
 import fr.telecom.Poc.Repositories.PersonneRepository;
 import fr.telecom.Poc.Services.ServicesImpl.PersonneServiceImpl;
 import fr.telecom.Poc.Utils.ListeRoles;
@@ -79,6 +83,7 @@ public class PersonneController {
 	public @ResponseBody String addNewPersonne(@RequestBody NouvellePersonneRequest nouvellePersonne) {
 		Personne p = new Personne(nouvellePersonne.getNom(), nouvellePersonne.getPrenom(),
 				encoder.encode(nouvellePersonne.getPassword()), nouvellePersonne.getRole());
+		
 		if (nouvellePersonne.getManager() != null) {
 			p.setManager(this.personneService.findPersonne(nouvellePersonne.getManager()).get());
 		}
@@ -94,6 +99,43 @@ public class PersonneController {
 					+ " existe deja.";
 		}
 		return "Nouvel utilisateur sauvegarde !";
+	}
+
+	@PatchMapping()
+	@PreAuthorize("hasRole('Manager') or hasRole('Admin')")
+	public @ResponseBody PersonneDTO patchPersonne(@RequestBody PatchPersonneRequest patchPersonne) {
+
+		Optional<Personne> p = personneService.findPersonne(patchPersonne.getId());
+
+		if (p.isEmpty()) {
+			// L'id est invalide
+			return null;
+		}
+
+		Personne patched = p.get();
+
+		if (patchPersonne.getNom() != null) {
+			patched.setNom(patchPersonne.getNom());
+		}
+		if (patchPersonne.getPrenom() != null) {
+			patched.setPrenom(patchPersonne.getPrenom());
+		}
+		if (patchPersonne.getPassword() != null) {
+			patched.setPassword(encoder.encode(patchPersonne.getPassword()));
+		}
+		if (patchPersonne.getRole() != null) {
+			if (ListeRoles.isPresent(patchPersonne.getRole())) {
+				patched.setRole(patchPersonne.getRole());
+			} else {
+				// Le nouveau role est invalide
+				return null;
+			}
+		}
+
+		// personneRepo.delete(p.get());
+		personneRepo.save(patched);
+
+		return new PersonneDTO(patched);
 	}
 
 	@DeleteMapping(path = "/{id}")
