@@ -22,9 +22,7 @@ export class FormManagerComponent implements OnInit {
   //API functions ----------------------------------------------------------
   get_project() { 
     this.service.getProject().subscribe(data=> {
-      console.log(data)
       this.projects=data
-      console.log(this.projects)
     })
   }
 
@@ -50,7 +48,6 @@ export class FormManagerComponent implements OnInit {
   }
 
   removeItem(index : number){
-    console.log(this.projects[index].id);
     this.deleteProject(this.projects[index].id);
     this.projects.splice(index,1);
     window.location.reload();

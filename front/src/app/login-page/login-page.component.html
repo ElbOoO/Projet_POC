@@ -20,16 +20,16 @@
         <div *ngIf="!logged">
             <h3>Log-in to your account</h3>
             <br>
-            <input class="logipage__text" name="username" [(ngModel)]="username" type="text"
+            <input class="logipage__text" name="username" [(ngModel)]="inputUsername" type="text"
                 placeholder="Enter your last name" />
             <br>
-            <input class="logipage__text" name="password" [(ngModel)]="password" type="password"
+            <input class="logipage__text" name="password" [(ngModel)]="inputPassword" type="password"
                 placeholder="Password" />
             <br><br>
             <button class="login__button" (click)="doLogin()">Log In</button>
         </div>
         <div *ngIf="logged">
-            <h3>Logged as {{username}}</h3>
+            <h3>Logged as {{currentUsername}} ({{currentUserRole}})</h3>
             <button class="login__button" (click)="deconnection()">Sign off</button>
         </div>
     </div>

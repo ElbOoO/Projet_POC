@@ -13,32 +13,19 @@ export class NavBarComponent implements OnInit {
 
   ngOnInit(): void {
   console.log(window.sessionStorage.getItem('access_token'))
-  console.log(window.sessionStorage.getItem('role'))
+  console.log("ID:"+window.sessionStorage.getItem('id')+" "+window.sessionStorage.getItem('username') +" "+ window.sessionStorage.getItem('role'))
+
     if(window.sessionStorage.getItem('role')!= null){
       this.logged =true
     }
-    if(window.sessionStorage.getItem('role')== 'ROLE_Manager'){
+    if(window.sessionStorage.getItem('role')== 'ROLE_Manager'||'ROLE_Admin'){
       this.manager =true
-    }
-    if(this.logged==true && this.location.isCurrentPathEqualTo('/home')){
-     // this.location.go('/time')
     }
     if(this.logged==false){
       this.location.go('/home') 
     }
-
   }
   
   logged = false
   manager = false
-
-/* deconnection(){
-
-  window.sessionStorage.setItem('access_token','')
-  window.sessionStorage.setItem('role','')
-  console.log(  window.sessionStorage.getItem('role')
-  )
-  
- }
- */
 }

@@ -1,8 +1,8 @@
 <div class="calendarpage d-flex justify-content-between">
     <div>
-        <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+        <h3>Période : {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
     </div>
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-toolbar">
         <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate">
             Previous
         </div>
@@ -20,10 +20,24 @@
         [dayEndHour]="7" [hourSegmentHeight]="45" [weekStartsOn]="1">
     </mwl-calendar-week-view>
 </div>
-<div class="btn-group" role="group" aria-label="Third group">
-    <button class="btn btn-success" (click)="popupAddTime = true">Add New Time</button>
-    <button class="btn btn-warning" (click)="popupExportPDF = true">Export to PDF</button>
+
+
+<div class="calendarpage d-flex justify-content-between">
+    <div id="mySelect">
+        <small class="form-text text-muted" *ngIf="currentUserRole=='ROLE_Manager'">See the time management of users you
+            are managing.</small>
+        <ng-select *ngIf="currentUserRole=='ROLE_Manager'" [items]="usersOfManager" bindLabel="nom" bindValue="id"
+            placeholder="Select a user time management" [(ngModel)]="selectedUserId"
+            (change)="refreshCalendar(selectedUserId)">
+        </ng-select>
+    </div>
+
+    <div class="btn-toolbar">
+        <button class="btn btn-success" (click)="popupAddTime = true">Add New Time</button>
+        <button class="btn btn-warning" (click)="popupExportPDF = true">Export to PDF</button>
+    </div>
 </div>
+
 <hr>
 
 <div class="overlay" *ngIf="popupAddTime" onLoad="this.focus()">
@@ -63,28 +77,28 @@
     </div>
 </div>
 
-<div id="test" class="d-flex justify-content-center">
+<div id="ListHeight" class="d-flex justify-content-center">
     <div class="table-responsive">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>Project</th>
-                    <th class="tabwidth">Starts at</th>
+                    <th>Project Name</th>
+                    <th class="tabwidth">Date</th>
                     <th class="tabwidth">Remove</th>
                 </tr>
             </thead>
 
             <tbody>
-                <tr *ngFor="let event of events; let i = index">
+                <tr *ngFor="let event of formattedEvents; let i = index">
                     <td>
-                        <p class="form-control">{{event.title}}</p>
+                        <p>{{event.project}}</p>
                     </td>
                     <td>
-                        <p class="form-control">{{event.start}}</p>
+                        <p class="center">{{event.date}}</p>
                     </td>
                     <td>
                         <button class="btn btn-danger" (click)="deleteEvent(event,i)">
-                            Delete
+                            Delete this line
                         </button>
                     </td>
                 </tr>
