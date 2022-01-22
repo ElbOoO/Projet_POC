@@ -11,7 +11,8 @@ import { AppComponent } from './app.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { LoginPageComponent } from './login-page/login-page.component';
-import { DropdownuserComponent } from './dropdownuser/dropdownuser.component';
+
+
 
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
@@ -25,7 +26,6 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
     CalendarComponent,
     NavBarComponent,
     LoginPageComponent,
-    DropdownuserComponent,
     FormManagerComponent,
     ProfileComponent
   ],

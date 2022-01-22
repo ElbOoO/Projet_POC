@@ -6,8 +6,22 @@
 .table-responsive {
   width: 90%;
 }
-#test {
+.tabwidth {
+  width: 10%;
+  text-align: center;
+}
+.center {
+  text-align: center;
+}
+
+#ListHeight {
   max-height: 30%;
+}
+#mySelect {
+  width: 35%;
+}
+button {
+  max-height: 50px;
 }
 .btn-group {
   width: 20%;
@@ -16,7 +30,7 @@
 }
 
 .calendarpage {
-  margin-top: 2%;
+  margin-top: 1%;
   margin-left: 5%;
   margin-right: 5%;
 }

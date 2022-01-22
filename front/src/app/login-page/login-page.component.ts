@@ -14,34 +14,41 @@ export class LoginPageComponent implements OnInit {
     if(window.sessionStorage.getItem('role')!= null){
       this.logged =true
     }
+    this.currentUsername=window.sessionStorage.getItem("username")
+    this.currentUserRole=window.sessionStorage.getItem('role')
   }
 
-  username:string='Gregoire.Biron';
-  password:string='azerty';
-  message:any;
+  currentUsername:any;
+  currentUserRole:any;
+  inputUsername:string="";
+  inputPassword:string="";
+  // inputUsername:string="Ruben.Feliciano";
+  // inputPassword:string="password";
 
-  doLogin(): string {
-  let resp= this.service.login(this.username,this.password);
-  console.log(resp)
+  doLogin() {
+  let resp= this.service.login(this.inputUsername,this.inputPassword);
   resp.subscribe(data=>{
-    //  this.data=data;
-    // console.log(this.data['access_token'])
-      console.log(data)
-      console.log(JSON.parse((JSON.stringify(data))).accessToken)
+      // console.log(data)
+      // console.log(window.sessionStorage.getItem('role'))
+      window.sessionStorage.setItem('pass',this.inputPassword)
       window.sessionStorage.setItem('access_token',JSON.parse((JSON.stringify(data))).accessToken)
       window.sessionStorage.setItem('role',data.roles)
-      console.log(window.sessionStorage.getItem('role'))
-      window.location.reload();
-      
-    // window.sessionStorage.setItem("auth-token",data.access_token)
-    })
-  return ''
+      window.sessionStorage.setItem('username',data.username)
+      window.sessionStorage.setItem('id',data.id)
+
+      window.location.pathname = "/time";
+    }
+    ,error => alert("User not found / Password Incorrect"))
   }
 
   deconnection(){
+    window.sessionStorage.removeItem('pass')
     window.sessionStorage.removeItem('access_token')
     window.sessionStorage.removeItem('role')
+    window.sessionStorage.removeItem('username')
+    window.sessionStorage.removeItem('id')
     window.location.reload();
   }
+
  logged = false
 }
