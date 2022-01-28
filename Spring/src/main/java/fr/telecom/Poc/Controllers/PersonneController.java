@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import fr.telecom.Poc.DTO.PersonneDTO;
 import fr.telecom.Poc.Models.Personne;
 import fr.telecom.Poc.Payloads.Requests.NouvellePersonneRequest;
 import fr.telecom.Poc.Payloads.Requests.PatchPersonneRequest;
+import fr.telecom.Poc.Payloads.Responses.MessageResponse;
 import fr.telecom.Poc.Repositories.PersonneRepository;
 import fr.telecom.Poc.Services.ServicesImpl.PersonneServiceImpl;
 import fr.telecom.Poc.Utils.ListeRoles;
@@ -86,7 +88,7 @@ public class PersonneController {
 
 	@PostMapping()
 	@PreAuthorize("hasRole('Manager') or hasRole('Admin')")
-	public @ResponseBody String addNewPersonne(@RequestBody NouvellePersonneRequest nouvellePersonne) {
+	public @ResponseBody ResponseEntity<?> addNewPersonne(@RequestBody NouvellePersonneRequest nouvellePersonne) {
 		Personne p = new Personne(nouvellePersonne.getNom(), nouvellePersonne.getPrenom(),
 				encoder.encode(nouvellePersonne.getPassword()), nouvellePersonne.getRole());
 
@@ -95,16 +97,16 @@ public class PersonneController {
 		}
 
 		if (!ListeRoles.isPresent(nouvellePersonne.getRole())) {
-			return "Erreur : Ce rôle n'est pas valide";
+			return ResponseEntity.badRequest().body(new MessageResponse("Erreur : Ce rôle n'est pas valide"));
 		}
 
 		try {
 			this.personneRepo.save(p);
 		} catch (DataIntegrityViolationException e) {
-			return "Erreur : l'utilisateur " + nouvellePersonne.getPrenom() + " " + nouvellePersonne.getNom()
-					+ " existe deja.";
+			return ResponseEntity.internalServerError().body(new MessageResponse("Erreur : l'utilisateur "
+					+ nouvellePersonne.getPrenom() + " " + nouvellePersonne.getNom() + " existe deja."));
 		}
-		return "Nouvel utilisateur sauvegarde !";
+		return ResponseEntity.ok(new MessageResponse("Nouvel utilisateur sauvegarde !"));
 	}
 
 	@PatchMapping()
@@ -164,12 +166,12 @@ public class PersonneController {
 	@DeleteMapping(path = "/{id}")
 	@PreAuthorize("hasRole('Admin')")
 	@ResponseBody
-	public String deletePersonne(@PathVariable Integer id) {
+	public ResponseEntity<?> deletePersonne(@PathVariable Integer id) {
 		if (this.personneService.findPersonne(id).isPresent()) {
 			this.personneRepo.deleteById(id);
-			return "Personne supprimée";
+			return ResponseEntity.ok(new MessageResponse("Personne supprimée !"));
 		} else {
-			return "Aucun utilisateur trouvé pour l'id " + id;
+			return ResponseEntity.internalServerError().body(new MessageResponse("Aucun utilisateur avec l'id " + id));
 		}
 	}
 }
