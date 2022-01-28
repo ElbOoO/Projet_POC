@@ -10,7 +10,8 @@ import { TokenStorageService } from '../token-storage.service';
 export class NavBarComponent implements OnInit {
 
   constructor(private location: Location,private service:TokenStorageService) { }
-
+  logged = false
+  manager = false
   ngOnInit(): void {
   console.log(window.sessionStorage.getItem('access_token'))
   console.log("ID:"+window.sessionStorage.getItem('id')+" "+window.sessionStorage.getItem('username') +" "+ window.sessionStorage.getItem('role'))
@@ -18,7 +19,8 @@ export class NavBarComponent implements OnInit {
     if(window.sessionStorage.getItem('role')!= null){
       this.logged =true
     }
-    if(window.sessionStorage.getItem('role')== 'ROLE_Manager'||'ROLE_Admin'){
+    if(window.sessionStorage.getItem('role')== 'ROLE_Manager'|| window.sessionStorage.getItem('role')== 'ROLE_Admin'){
+      console.log("yeet")
       this.manager =true
     }
     if(this.logged==false){
@@ -26,6 +28,5 @@ export class NavBarComponent implements OnInit {
     }
   }
   
-  logged = false
-  manager = false
+
 }

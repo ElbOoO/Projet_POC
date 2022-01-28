@@ -5,15 +5,18 @@
                 <div class="card-block text-center text-white ">
                     <img src="https://img.icons8.com/bubbles/100/000000/user.png" class="img-radius"
                         alt="User-Profile-Image">
-                    <div class="d-flex justify-content-center">
-                        <ng-select *ngIf="currentUserRole=='ROLE_Admin'" id="list" [items]="usersList" bindLabel="nom"
-                            bindValue="id" placeholder="Select a user profile" [(ngModel)]="selectedUserId"
+                    <div class="d-flex justify-content-between" *ngIf="currentUserRole=='ROLE_Admin'">
+                        <button class="btn btn-success " (click)="newUser()">Create a New User</button>
+                        <ng-select id="list" [items]="usersList" bindLabel="nom" bindValue="id"
+                            placeholder="Select a user profile" [(ngModel)]="selectedUserId"
                             (change)="refreshProfile(selectedUserId)">
                         </ng-select>
+                        <button class="btn btn-danger " [disabled]='currentUserId==selectedUserId'
+                            (click)="delete()">Delete this User</button>
                     </div>
                 </div>
             </div>
-            <div class="card-block">
+            <div class="card-block" *ngIf="popupNewUser == false">
                 <h6 class="b-b-default f-w-600">User Informations</h6>
                 <div class="row">
                     <div class="col-sm-6">
@@ -30,31 +33,91 @@
                     <div class="col-sm-6">
                         <p class="m-b-10 f-w-600">Role</p>
                         <ng-select [items]="rolesList" placeholder="List of roles" [(ngModel)]="role"
-                            [disabled]='currentUserRole!="ROLE_Admin"'>
+                            (change)="roleChanged()"
+                            [disabled]='currentUserRole!="ROLE_Admin" || currentUserId==selectedUserId'>
                         </ng-select>
                     </div>
                     <div class="col-sm-6" *ngIf='currentUserRole!="ROLE_Manager"'>
-                        <p class="m-b-10 f-w-600">Manager ID</p>
-                        <input type="text" [(ngModel)]="manager"><!-- ='currentUserRole!="ROLE_Admin"' -->
+                        <p class="m-b-10 f-w-600">Your Manager</p>
+                        <ng-select [items]="managersList" placeholder="You don't have any manager" [(ngModel)]="manager"
+                            bindLabel="nom" bindValue="id"
+                            [disabled]='currentUserRole!="ROLE_Admin" || role!="ROLE_User"'>
+                        </ng-select>
                     </div>
                 </div>
                 <br>
-                <h6 class="b-b-default f-w-600" *ngIf='currentUserRole=="ROLE_Admin"'>Change Password</h6>
+                <h6 class="b-b-default f-w-600" *ngIf='currentUserRole=="ROLE_Admin"'>Change Password (Let null if
+                    unchanged)</h6>
                 <div class="row" *ngIf='currentUserRole=="ROLE_Admin"'>
                     <div class="col-sm-6">
-                        <input type="password" [(ngModel)]="password">
+                        <input type="password" placeholder="New password" [(ngModel)]="password">
                     </div>
                     <div class="col-sm-6">
-                        <input type="password" [(ngModel)]="passconfirm">
+                        <input type="password" placeholder="Confirm new password" [(ngModel)]="passconfirm">
                     </div>
                 </div>
                 <br>
                 <div class="d-flex justify-content-end" *ngIf='currentUserRole=="ROLE_Admin"'>
-                    <button class="btn btn-success " [disabled]='compare(password,passconfirm)==false'
+                    <button class="btn btn-success " [disabled]='!compare(password,passconfirm,false) || isEmpty()'
                         (click)="save(name,firstname,password,role,manager)">Save
                         Changes</button>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="overlay" *ngIf="popupNewUser" onLoad="this.focus()">
+    <div class="popup">
+        <div id="form">
+            <div class="card-block">
+                <h6 class="b-b-default f-w-600">New User</h6>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p class="m-b-10 f-w-600">Name</p>
+                        <input type="text" [(ngModel)]="name" [disabled]='currentUserRole!="ROLE_Admin"'>
+                    </div>
+                    <div class="col-sm-6">
+                        <p class="m-b-10 f-w-600">FirstName</p>
+                        <input type="text" [(ngModel)]="firstname" [disabled]='currentUserRole!="ROLE_Admin"'>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p class="m-b-10 f-w-600">Role</p>
+                        <ng-select [items]="rolesList" placeholder="List of roles" [(ngModel)]="role"
+                            (change)="roleChanged()" [disabled]='currentUserRole!="ROLE_Admin"'>
+                        </ng-select>
+                    </div>
+                    <div class="col-sm-6" *ngIf='currentUserRole!="ROLE_Manager"'>
+                        <p class="m-b-10 f-w-600">Your Manager</p>
+                        <ng-select [items]="managersList" placeholder="You don't have any manager" [(ngModel)]="manager"
+                            bindLabel="nom" bindValue="id"
+                            [disabled]='currentUserRole!="ROLE_Admin" || role!="ROLE_User"'>
+                        </ng-select>
+                    </div>
+                </div>
+                <br>
+
+                <div class="row">
+                    <p class="m-b-10 f-w-600">Password</p>
+                    <div class="col-sm-6">
+                        <input type="password" placeholder="New password" [(ngModel)]="password">
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="password" placeholder="Confirm new password" [(ngModel)]="passconfirm">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-success" (click)="add(name,firstname,password,role,manager)"
+                (click)="popupNewUser = false" [disabled]='!compare(password,passconfirm,true) || isEmpty()'>
+                Créer </button>
+            <button class="btn btn-danger" (click)="refreshProfile(selectedUserId)" (click)="
+                popupNewUser=false">Cancel</button>
         </div>
     </div>
 </div>

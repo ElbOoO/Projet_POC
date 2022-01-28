@@ -37,11 +37,15 @@ export class RestapiService {
 
   public getUsersManager(_id:number){
     return this.http.get<User[]>(LINK_API +'personnes/manager='+_id,this.makeHeader())
-   
+  };
+
+  public getManagers(){
+    return this.http.get<User[]>(LINK_API +'personnes/managers',this.makeHeader())
   };
 
   public postUsers(nom:string,prenom:string,password:string,role:string,manager:number){
     const body = {"nom": nom,"prenom": prenom,"password": password,"role": role,"manager": manager}
+    console.log(body)
     return this.http.post<User>(LINK_API +'personnes',body,this.makeHeader())
   };
 
@@ -50,7 +54,13 @@ export class RestapiService {
   };
 
   public patchUsers(id:number,nom:string,prenom:string,password:string,role:string,manager:number){
-    const body = {"id":id,"nom": nom,"prenom": prenom,"password": password,"role": role,"manager": manager}
+    var body;
+    if (password=="" || password==null){
+      body = {"id":id,"nom": nom,"prenom": prenom,"role": role,"manager": manager}
+    }else{
+      body = {"id":id,"nom": nom,"prenom": prenom,"password": password,"role": role,"manager": manager}
+    }
+    
     return this.http.patch<User>(LINK_API +'personnes',body,this.makeHeader())
   };
 
