@@ -5,8 +5,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -43,7 +41,6 @@ public class PersonneController {
 	PasswordEncoder encoder;
 
 	@GetMapping(produces = "application/json")
-	@PreAuthorize("hasRole('Manager') or hasRole('Admin')")
 	public @ResponseBody Iterable<PersonneDTO> getAllPersonnes() {
 		ArrayList<PersonneDTO> result = new ArrayList<PersonneDTO>();
 
@@ -78,12 +75,21 @@ public class PersonneController {
 		}
 	}
 
+	@GetMapping(path = "/managers", produces = "application/json")
+	public @ResponseBody Iterable<PersonneDTO> getAllManagers() {
+		ArrayList<PersonneDTO> result = new ArrayList<PersonneDTO>();
+
+		this.personneService.findAllManagers().forEach(manager -> result.add(new PersonneDTO(manager)));
+
+		return result;
+	}
+
 	@PostMapping()
 	@PreAuthorize("hasRole('Manager') or hasRole('Admin')")
 	public @ResponseBody String addNewPersonne(@RequestBody NouvellePersonneRequest nouvellePersonne) {
 		Personne p = new Personne(nouvellePersonne.getNom(), nouvellePersonne.getPrenom(),
 				encoder.encode(nouvellePersonne.getPassword()), nouvellePersonne.getRole());
-		
+
 		if (nouvellePersonne.getManager() != null) {
 			p.setManager(this.personneService.findPersonne(nouvellePersonne.getManager()).get());
 		}
@@ -109,6 +115,8 @@ public class PersonneController {
 
 		if (p.isEmpty()) {
 			// L'id est invalide
+			System.out.println("Erreur : Impossible de moifier l'utilisateur " + patchPersonne.getId()
+					+ " car il est introuvable.");
 			return null;
 		}
 
@@ -122,6 +130,21 @@ public class PersonneController {
 		}
 		if (patchPersonne.getPassword() != null) {
 			patched.setPassword(encoder.encode(patchPersonne.getPassword()));
+		}
+		if (patchPersonne.getManager() != null) {
+			Optional<Personne> manager = this.personneService.findPersonne(patchPersonne.getManager());
+
+			if (manager.isEmpty()) {
+				// Le manager n'existe pas
+				System.out.println("Erreur : Aucun utilisateur avec l'id " + patchPersonne.getManager());
+				return null;
+			} else if (!manager.get().getRole().equals("ROLE_Manager")) {
+				// Cette personne n'est pas manager
+				System.out.println("Erreur : Cet utilisateur n'est pas manager.");
+				return null;
+			}
+
+			patched.setManager(manager.get());
 		}
 		if (patchPersonne.getRole() != null) {
 			if (ListeRoles.isPresent(patchPersonne.getRole())) {
