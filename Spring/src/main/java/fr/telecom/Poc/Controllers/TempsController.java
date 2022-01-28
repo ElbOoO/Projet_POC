@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +25,7 @@ import fr.telecom.Poc.Models.Temps;
 import fr.telecom.Poc.Models.VerrouillageTemps;
 import fr.telecom.Poc.Payloads.Requests.ExportTempsRequest;
 import fr.telecom.Poc.Payloads.Requests.TempsRequest;
+import fr.telecom.Poc.Payloads.Responses.MessageResponse;
 import fr.telecom.Poc.Repositories.TempsRepository;
 import fr.telecom.Poc.Repositories.VerrouillageTempsRepository;
 import fr.telecom.Poc.Services.ServicesImpl.PersonneServiceImpl;
@@ -112,7 +114,7 @@ public class TempsController {
 
 	@PostMapping
 	@ResponseBody
-	public String addTemps(@RequestBody TempsRequest nouveauTemps) {
+	public ResponseEntity<?> addTemps(@RequestBody TempsRequest nouveauTemps) {
 		Optional<Personne> utilisateur = this.personneService.findPersonne(nouveauTemps.getUtilisateur());
 		Optional<Projet> projet = this.projetService.findProjet(nouveauTemps.getProjet());
 
@@ -124,22 +126,25 @@ public class TempsController {
 			if (!verrouService.isLocked(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR), utilisateur.get())) {
 				this.tempsRepo.save(
 						new Temps(nouveauTemps.getDate(), nouveauTemps.getPoids(), utilisateur.get(), projet.get()));
-				return "Saved.";
+				return ResponseEntity.ok(new MessageResponse("Saved."));
 			} else {
-				return ("Erreur : Impossible d'ajouter un temps a cette date " + nouveauTemps.getDate()
-						+ " : ce mois a deja ete exporte");
+				return ResponseEntity.internalServerError()
+						.body(new MessageResponse("Erreur : Impossible d'ajouter un temps a cette date "
+								+ nouveauTemps.getDate() + " : ce mois a deja ete exporte"));
 			}
 
 		} else if (projet.isEmpty()) {
-			return "Error : Cannot find a Projet with the id: " + nouveauTemps.getProjet();
+			return ResponseEntity.internalServerError()
+					.body("Error : Cannot find a Projet with the id: " + nouveauTemps.getProjet());
 		} else {
-			return "Error : Cannot find a Personne with the id: " + nouveauTemps.getUtilisateur();
+			return ResponseEntity.internalServerError()
+					.body("Error : Cannot find a Personne with the id: " + nouveauTemps.getUtilisateur());
 		}
 	}
 
 	@DeleteMapping(path = "/{id}")
 	@ResponseBody
-	public String deleteTemps(@PathVariable Integer id) {
+	public ResponseEntity<?> deleteTemps(@PathVariable Integer id) {
 		Optional<Temps> t = this.tempsService.findTemps(id);
 
 		if (!t.isEmpty()) {
@@ -150,12 +155,13 @@ public class TempsController {
 			if (!this.verrouService.isLocked(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR),
 					t.get().getUtilisateur())) {
 				this.tempsRepo.deleteById(id);
-				return "Temps supprimé";
+				return ResponseEntity.ok("Temps supprimé");
 			} else {
-				return "Erreur : Impossible de supprimer ce temps car il a deja ete exporte.";
+				return ResponseEntity.internalServerError()
+						.body("Erreur : Impossible de supprimer ce temps car il a deja ete exporte.");
 			}
 		} else {
-			return "Erreur : Aucun temps trouvé avec l'id " + id;
+			return ResponseEntity.internalServerError().body("Erreur : Aucun temps trouvé avec l'id " + id);
 		}
 	}
 }
