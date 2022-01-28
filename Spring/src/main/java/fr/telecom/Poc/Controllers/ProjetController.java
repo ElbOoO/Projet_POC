@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import fr.telecom.Poc.DTO.ProjetDTO;
 import fr.telecom.Poc.Models.Personne;
 import fr.telecom.Poc.Models.Projet;
+import fr.telecom.Poc.Payloads.Responses.MessageResponse;
 import fr.telecom.Poc.Repositories.ProjetRepository;
 import fr.telecom.Poc.Services.ServicesImpl.PersonneServiceImpl;
 import fr.telecom.Poc.Services.ServicesImpl.ProjetServiceImpl;
@@ -73,26 +75,27 @@ public class ProjetController {
 	@PostMapping
 	@PreAuthorize("hasRole('Manager') or hasRole('Admin')")
 	@ResponseBody
-	public String addProjet(@RequestBody ProjetDTO nouveauProjet) {
+	public ResponseEntity<?> addProjet(@RequestBody ProjetDTO nouveauProjet) {
 		Optional<Personne> manager = this.personneService.findPersonne(nouveauProjet.getManager());
 
 		if (manager.isEmpty()) {
-			return "Error : this manager does not exist.";
+			return ResponseEntity.internalServerError()
+					.body(new MessageResponse("Error : this manager does not exist."));
 		} else {
 			this.projetRepo.save(new Projet(nouveauProjet.getNom(), nouveauProjet.getCouleur(), manager.get()));
-			return "Saved.";
+			return ResponseEntity.ok(new MessageResponse("Saved."));
 		}
 	}
 
 	@DeleteMapping(path = "/{id}")
 	@PreAuthorize("hasRole('Manager') or hasRole('Admin')")
 	@ResponseBody
-	public String deleteProjet(@PathVariable Integer id) {
+	public ResponseEntity<?> deleteProjet(@PathVariable Integer id) {
 		if (this.projetService.findProjet(id).isPresent()) {
 			this.projetRepo.deleteById(id);
-			return "Projet supprimé";
+			return ResponseEntity.ok(new MessageResponse("Projet supprimé"));
 		} else {
-			return "Aucun projet trouvé pour l'id " + id;
+			return ResponseEntity.internalServerError().body("Aucun projet trouvé pour l'id " + id);
 		}
 	}
 }
