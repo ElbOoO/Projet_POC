@@ -45,8 +45,6 @@ public class CustomPersonneRepositoryImpl implements CustomPersonneRepository {
 	public ArrayList<Personne> findManagers() {
 		Query query = entityManager.createQuery("FROM Personne WHERE role LIKE 'ROLE_Manager'");
 
-		System.out.println(query.getResultList());
-
 		return (ArrayList<Personne>) query.getResultList();
 	}
 
