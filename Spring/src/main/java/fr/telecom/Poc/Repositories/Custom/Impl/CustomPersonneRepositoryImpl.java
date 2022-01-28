@@ -3,13 +3,10 @@ package fr.telecom.Poc.Repositories.Custom.Impl;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.telecom.Poc.Models.Personne;
@@ -32,18 +29,24 @@ public class CustomPersonneRepositoryImpl implements CustomPersonneRepository {
 			return null;
 		}
 
+		// On force le format du nom et du prenom (majuscule au debut puis tout en
+		// minuscules)
+		String prenom = name[0].substring(0, 1).toUpperCase() + name[0].substring(1).toLowerCase();
+		String nom = name[1].substring(0, 1).toUpperCase() + name[1].substring(1).toLowerCase();
+
 		Query query = entityManager.createQuery("FROM Personne WHERE nom LIKE :nom AND prenom LIKE :prenom")
-				.setParameter("nom", name[1]).setParameter("prenom", name[0]);
+				.setParameter("nom", nom).setParameter("prenom", prenom);
 
 		return Optional.of((Personne) query.getSingleResult());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public ArrayList<Personne> findManagers() {
 		Query query = entityManager.createQuery("FROM Personne WHERE role LIKE 'ROLE_Manager'");
 
 		System.out.println(query.getResultList());
-		
+
 		return (ArrayList<Personne>) query.getResultList();
 	}
 
