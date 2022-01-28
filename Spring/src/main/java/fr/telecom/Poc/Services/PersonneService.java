@@ -1,5 +1,6 @@
 package fr.telecom.Poc.Services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,4 +14,6 @@ public interface PersonneService {
 	public List<Personne> findPersonneByManager(Personne manager);
 	
 	public Optional<Personne> findPersonneByUsername(String username);
+
+	public ArrayList<Personne> findAllManagers();
 }

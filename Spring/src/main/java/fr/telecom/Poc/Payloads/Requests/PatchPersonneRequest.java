@@ -12,6 +12,7 @@ public class PatchPersonneRequest {
 	private String prenom;
 	private String role;
 	private String password;
+	private Integer manager;
 
 	public PatchPersonneRequest() {
 
@@ -63,6 +64,14 @@ public class PatchPersonneRequest {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Integer getManager() {
+		return manager;
+	}
+
+	public void setManager(Integer manager) {
+		this.manager = manager;
 	}
 
 }

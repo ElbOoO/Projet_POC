@@ -1,5 +1,6 @@
 package fr.telecom.Poc.Services.ServicesImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +35,11 @@ public class PersonneServiceImpl implements PersonneService {
 	@Override
 	public Optional<Personne> findPersonneByUsername(String username) {
 		return this.personneRepo.findByUsername(username);
+	}
+
+	@Override
+	public ArrayList<Personne> findAllManagers() {
+		return this.personneRepo.findManagers();
 	}
 
 }
