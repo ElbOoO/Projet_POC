@@ -106,7 +106,11 @@ public class TempsController {
 		}
 
 		verrouRepo.save(new VerrouillageTemps(month.getMonthValue(), month.getYear(), utilisateur.get()));
-		tempsService.exportTempsUtilisateur(utilisateur.get(), month).forEach(temps -> result.add(new TempsDTO(temps)));
+		tempsService.exportTempsUtilisateur(utilisateur.get(), month).forEach(temps -> {
+			temps.setLocked(true);
+			this.tempsRepo.save(temps);
+			result.add(new TempsDTO(temps));
+		});
 
 		return result;
 	}

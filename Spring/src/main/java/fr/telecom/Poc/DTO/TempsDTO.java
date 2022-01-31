@@ -10,6 +10,7 @@ public class TempsDTO {
 	private Double poids;
 	private PersonneDTO utilisateur;
 	private ProjetDTO projet;
+	private Boolean locked;
 
 	public TempsDTO(Temps t) {
 		this.id = t.getId();
@@ -17,6 +18,7 @@ public class TempsDTO {
 		this.poids = t.getPoids();
 		this.utilisateur = new PersonneDTO(t.getUtilisateur());
 		this.projet = new ProjetDTO(t.getProjet());
+		this.locked = t.getLocked();
 	}
 
 	public Integer getId() {
@@ -59,4 +61,11 @@ public class TempsDTO {
 		this.projet = projet;
 	}
 
+	public Boolean getLocked() {
+		return locked;
+	}
+
+	public void setLocked(Boolean locked) {
+		this.locked = locked;
+	}
 }
