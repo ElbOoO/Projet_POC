@@ -1,12 +1,13 @@
 package fr.telecom.Poc.DTO;
 
-import java.sql.Date;
+import java.time.LocalDate;
+
 import fr.telecom.Poc.Models.Temps;
 
 public class TempsDTO {
 
 	private Integer id;
-	private Date date;
+	private LocalDate date;
 	private Double poids;
 	private PersonneDTO utilisateur;
 	private ProjetDTO projet;
@@ -29,11 +30,11 @@ public class TempsDTO {
 		this.id = id;
 	}
 
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 

@@ -1,6 +1,6 @@
 package fr.telecom.Poc.Models;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +13,7 @@ public class Temps {
 	@GeneratedValue
 	private Integer id;
 
-	private Date date;
+	private LocalDate date;
 	private Double poids;
 	@ManyToOne
 	private Personne utilisateur;
@@ -26,7 +26,7 @@ public class Temps {
 
 	}
 
-	public Temps(Date date, Double poids, Personne utilisateur, Projet projet) {
+	public Temps(LocalDate date, Double poids, Personne utilisateur, Projet projet) {
 		this.date = date;
 		this.poids = poids;
 		this.utilisateur = utilisateur;
@@ -42,11 +42,11 @@ public class Temps {
 		this.id = id;
 	}
 
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 

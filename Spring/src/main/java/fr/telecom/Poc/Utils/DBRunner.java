@@ -1,6 +1,6 @@
 package fr.telecom.Poc.Utils;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -54,9 +54,9 @@ public class DBRunner implements CommandLineRunner {
 		Projet pri = new Projet("Projet PRI", "#37B850", gregoire);
 		Projet ntiers = new Projet("Projet Architecture N-tiers", "#31AEF6", ruben);
 
-		Temps t1 = new Temps(new java.sql.Date(new Date().getTime()), 0.5, thomas, poc);
-		Temps t2 = new Temps(new java.sql.Date(new Date().getTime()), 0.25, gregoire, pri);
-		Temps t3 = new Temps(new java.sql.Date(new Date().getTime()), 1.0, ruben, ntiers);
+		Temps t1 = new Temps(LocalDate.now(), 0.5, thomas, poc);
+		Temps t2 = new Temps(LocalDate.now(), 0.25, gregoire, pri);
+		Temps t3 = new Temps(LocalDate.now(), 1.0, ruben, ntiers);
 
 		VerrouillageTemps verrou = new VerrouillageTemps(1, 2022, ruben);
 
