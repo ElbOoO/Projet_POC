@@ -1,6 +1,6 @@
 package fr.telecom.Poc.Services;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,10 +9,10 @@ import fr.telecom.Poc.Models.Temps;
 
 public interface TempsService {
 	public List<Temps> findAllTemps();
-	
+
 	public Optional<Temps> findTemps(Integer id);
-	
+
 	public List<Temps> findByUtilisateur(Personne utilisateur);
-	
-	public List<Temps> exportTempsUtilisateur(Personne utilisateur, Date date);
+
+	public List<Temps> exportTempsUtilisateur(Personne utilisateur, LocalDate date);
 }

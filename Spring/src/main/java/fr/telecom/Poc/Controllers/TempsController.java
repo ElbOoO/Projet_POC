@@ -1,12 +1,13 @@
 package fr.telecom.Poc.Controllers;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,7 +24,6 @@ import fr.telecom.Poc.Models.Personne;
 import fr.telecom.Poc.Models.Projet;
 import fr.telecom.Poc.Models.Temps;
 import fr.telecom.Poc.Models.VerrouillageTemps;
-import fr.telecom.Poc.Payloads.Requests.ExportTempsRequest;
 import fr.telecom.Poc.Payloads.Requests.TempsRequest;
 import fr.telecom.Poc.Payloads.Responses.MessageResponse;
 import fr.telecom.Poc.Repositories.TempsRepository;
@@ -84,30 +84,29 @@ public class TempsController {
 		}
 	}
 
-	@GetMapping(path = "/export", produces = "application/json")
+	@GetMapping(path = "/export/{user}/{date}", produces = "application/json")
 	@ResponseBody
-	public Iterable<TempsDTO> exportTemps(@RequestBody ExportTempsRequest request) {
-		Optional<Personne> user = personneService.findPersonne(request.getUtilisateur());
+	public Iterable<TempsDTO> exportTemps(@PathVariable Integer user, @PathVariable String date) {
+		Optional<Personne> utilisateur = personneService.findPersonne(user);
 		ArrayList<TempsDTO> result = new ArrayList<TempsDTO>();
 
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(request.getDate());
+		DateTimeFormatter parser = DateTimeFormatter.ofPattern("yyy-MM-dd");
+		LocalDate month = LocalDate.parse(date, parser);
 
-		if (user.isEmpty()) {
-			System.out.println("Erreur : l'utilisateur avec l'id " + request.getUtilisateur()
-					+ " n'existe pas dans la base de donnees.");
+		if (utilisateur.isEmpty()) {
+			System.out.println("Erreur : l'utilisateur avec l'id " + user + " n'existe pas dans la base de donnees.");
 			return null;
 		}
 
-		try {
-			verrouRepo.save(new VerrouillageTemps(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR), user.get()));
-			tempsService.exportTempsUtilisateur(user.get(), request.getDate())
-					.forEach(temps -> result.add(new TempsDTO(temps)));
-		} catch (DataIntegrityViolationException e) {
+		if (this.verrouRepo.findByMoisAndAnneeAndUtilisateur(month.getMonthValue(), month.getYear(), utilisateur.get())
+				.isPresent()) {
 			// Si ce verrou existe deja
 			System.out.println("Erreur : Les temps recherches ont deja ete exportes.");
 			return null;
 		}
+
+		verrouRepo.save(new VerrouillageTemps(month.getMonthValue(), month.getYear(), utilisateur.get()));
+		tempsService.exportTempsUtilisateur(utilisateur.get(), month).forEach(temps -> result.add(new TempsDTO(temps)));
 
 		return result;
 	}

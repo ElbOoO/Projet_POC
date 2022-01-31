@@ -1,6 +1,6 @@
 package fr.telecom.Poc.Services.ServicesImpl;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +34,7 @@ public class TempsServiceImpl implements TempsService {
 	}
 
 	@Override
-	public List<Temps> exportTempsUtilisateur(Personne utilisateur, Date date) {
+	public List<Temps> exportTempsUtilisateur(Personne utilisateur, LocalDate date) {
 		return this.tempsRepo.findByUtilisateurForMonth(utilisateur.getId(), date);
 	}
 
