@@ -1,16 +1,13 @@
 package fr.telecom.Poc.Models;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "Verrou", uniqueConstraints = {
-		@UniqueConstraint(name = "UniqueDate", columnNames = { "mois", "annee" }) })
+@Table(name = "Verrou")
 public class VerrouillageTemps {
 
 	@Id

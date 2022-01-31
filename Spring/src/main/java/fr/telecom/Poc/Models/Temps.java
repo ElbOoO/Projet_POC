@@ -2,13 +2,10 @@ package fr.telecom.Poc.Models;
 
 import java.sql.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-
-import org.hibernate.annotations.Cascade;
 
 @Entity
 public class Temps {
@@ -23,6 +20,8 @@ public class Temps {
 	@ManyToOne
 	private Projet projet;
 
+	private Boolean locked;
+
 	public Temps() {
 
 	}
@@ -32,6 +31,7 @@ public class Temps {
 		this.poids = poids;
 		this.utilisateur = utilisateur;
 		this.projet = projet;
+		this.locked = false;
 	}
 
 	public Integer getId() {
@@ -72,6 +72,14 @@ public class Temps {
 
 	public void setProjet(Projet projet) {
 		this.projet = projet;
+	}
+
+	public Boolean getLocked() {
+		return locked;
+	}
+
+	public void setLocked(Boolean locked) {
+		this.locked = locked;
 	}
 
 }

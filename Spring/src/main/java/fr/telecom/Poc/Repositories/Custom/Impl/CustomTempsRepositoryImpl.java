@@ -1,6 +1,7 @@
 package fr.telecom.Poc.Repositories.Custom.Impl;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.List;
 
@@ -17,9 +18,11 @@ public class CustomTempsRepositoryImpl implements CustomTempsRepository {
 	EntityManager entityManager;
 
 	@Override
-	public List<Temps> findByUtilisateurForMonth(Integer userId, Date date) {
+	public List<Temps> findByUtilisateurForMonth(Integer userId, LocalDate date) {
+		System.out.println("Find temps by month:");
+
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
+		cal.set(date.getYear(), date.getMonthValue() - 1, date.getDayOfMonth());
 
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
 		Date dateDebut = new Date(cal.getTime().getTime());

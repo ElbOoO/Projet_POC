@@ -1,10 +1,10 @@
 package fr.telecom.Poc.Repositories.Custom;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import fr.telecom.Poc.Models.Temps;
 
 public interface CustomTempsRepository {
-	public List<Temps> findByUtilisateurForMonth(Integer userId, Date date);
+	public List<Temps> findByUtilisateurForMonth(Integer userId, LocalDate date);
 }
