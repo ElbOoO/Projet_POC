@@ -1,25 +1,25 @@
 package fr.telecom.Poc.Payloads.Requests;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 public class TempsRequest {
-	private Date date;
+	private LocalDate date;
 	private Double poids;
 	private Integer utilisateur;
 	private Integer projet;
 
-	public TempsRequest(Date date, Double poids, Integer utilisateur, Integer projet) {
+	public TempsRequest(LocalDate date, Double poids, Integer utilisateur, Integer projet) {
 		this.date = date;
 		this.poids = poids;
 		this.utilisateur = utilisateur;
 		this.projet = projet;
 	}
 
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 

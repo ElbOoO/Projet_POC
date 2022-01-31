@@ -1,10 +1,8 @@
 package fr.telecom.Poc.Controllers;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +88,7 @@ public class TempsController {
 		Optional<Personne> utilisateur = personneService.findPersonne(user);
 		ArrayList<TempsDTO> result = new ArrayList<TempsDTO>();
 
-		DateTimeFormatter parser = DateTimeFormatter.ofPattern("yyy-MM-dd");
+		DateTimeFormatter parser = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate month = LocalDate.parse(date, parser);
 
 		if (utilisateur.isEmpty()) {
@@ -121,12 +119,10 @@ public class TempsController {
 		Optional<Personne> utilisateur = this.personneService.findPersonne(nouveauTemps.getUtilisateur());
 		Optional<Projet> projet = this.projetService.findProjet(nouveauTemps.getProjet());
 
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(nouveauTemps.getDate());
-
 		if (!projet.isEmpty() && !utilisateur.isEmpty()) {
 
-			if (!verrouService.isLocked(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR), utilisateur.get())) {
+			if (!verrouService.isLocked(nouveauTemps.getDate().getMonthValue(), nouveauTemps.getDate().getYear(),
+					utilisateur.get())) {
 				this.tempsRepo.save(
 						new Temps(nouveauTemps.getDate(), nouveauTemps.getPoids(), utilisateur.get(), projet.get()));
 				return ResponseEntity.ok(new MessageResponse("Saved."));
@@ -151,12 +147,9 @@ public class TempsController {
 		Optional<Temps> t = this.tempsService.findTemps(id);
 
 		if (!t.isEmpty()) {
-			Date d = t.get().getDate();
+			LocalDate d = t.get().getDate();
 
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(d);
-			if (!this.verrouService.isLocked(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR),
-					t.get().getUtilisateur())) {
+			if (!this.verrouService.isLocked(d.getMonthValue(), d.getYear(), t.get().getUtilisateur())) {
 				this.tempsRepo.deleteById(id);
 				return ResponseEntity.ok("Temps supprimé");
 			} else {
