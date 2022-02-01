@@ -1,6 +1,6 @@
 <div class="padding">
     <div class="d-flex justify-content-center">
-        <div class="col-xl-6 col-md-12">
+        <div class="col-md-12">
             <div class="card user-card-full">
                 <div class="card-block text-center text-white ">
                     <img src="https://img.icons8.com/bubbles/100/000000/user.png" class="img-radius"
@@ -8,7 +8,7 @@
                     <div class="d-flex justify-content-between" *ngIf="currentUserRole=='ROLE_Admin'">
                         <button class="btn btn-success " (click)="newUser()">Create a New User</button>
                         <ng-select id="list" [items]="usersList" bindLabel="nom" bindValue="id"
-                            placeholder="Select a user profile" [(ngModel)]="selectedUserId"
+                            placeholder="Select a user profile" [(ngModel)]="selectedUserId" [clearable]="false"
                             (change)="refreshProfile(selectedUserId)">
                         </ng-select>
                         <button class="btn btn-danger " [disabled]='currentUserId==selectedUserId'
@@ -33,18 +33,19 @@
                     <div class="col-sm-6">
                         <p class="m-b-10 f-w-600">Role</p>
                         <ng-select [items]="rolesList" placeholder="List of roles" [(ngModel)]="role"
-                            (change)="roleChanged()"
+                            (change)="roleChanged()" [clearable]="false"
                             [disabled]='currentUserRole!="ROLE_Admin" || currentUserId==selectedUserId'>
                         </ng-select>
                     </div>
                     <div class="col-sm-6" *ngIf='currentUserRole!="ROLE_Manager"'>
                         <p class="m-b-10 f-w-600">Your Manager</p>
                         <ng-select [items]="managersList" placeholder="You don't have any manager" [(ngModel)]="manager"
-                            bindLabel="nom" bindValue="id"
+                            [clearable]="false" bindLabel="nom" bindValue="id"
                             [disabled]='currentUserRole!="ROLE_Admin" || role!="ROLE_User"'>
                         </ng-select>
                     </div>
                 </div>
+                <br>
                 <br>
                 <h6 class="b-b-default f-w-600" *ngIf='currentUserRole=="ROLE_Admin"'>Change Password (Let null if
                     unchanged)</h6>
@@ -87,13 +88,13 @@
                     <div class="col-sm-6">
                         <p class="m-b-10 f-w-600">Role</p>
                         <ng-select [items]="rolesList" placeholder="List of roles" [(ngModel)]="role"
-                            (change)="roleChanged()" [disabled]='currentUserRole!="ROLE_Admin"'>
+                            [clearable]="false" (change)="roleChanged()" [disabled]='currentUserRole!="ROLE_Admin"'>
                         </ng-select>
                     </div>
                     <div class="col-sm-6" *ngIf='currentUserRole!="ROLE_Manager"'>
                         <p class="m-b-10 f-w-600">Your Manager</p>
                         <ng-select [items]="managersList" placeholder="You don't have any manager" [(ngModel)]="manager"
-                            bindLabel="nom" bindValue="id"
+                            [clearable]="false" bindLabel="nom" bindValue="id"
                             [disabled]='currentUserRole!="ROLE_Admin" || role!="ROLE_User"'>
                         </ng-select>
                     </div>

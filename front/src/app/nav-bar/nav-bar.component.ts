@@ -20,7 +20,6 @@ export class NavBarComponent implements OnInit {
       this.logged =true
     }
     if(window.sessionStorage.getItem('role')== 'ROLE_Manager'|| window.sessionStorage.getItem('role')== 'ROLE_Admin'){
-      console.log("yeet")
       this.manager =true
     }
     if(this.logged==false){

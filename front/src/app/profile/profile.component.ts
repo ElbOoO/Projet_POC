@@ -53,21 +53,21 @@ export class ProfileComponent implements OnInit {
         }      
       }
     })
-    this.service.getManagers().subscribe(data=> {// GET: list des users
-      for (let i = 0; i < data.length; i++) {
-        if(this.currentUserId==data[i].id){
-          this.managersList = [...this.managersList, {nom:"(You) "+data[i].prenom+"."+data[i].nom,id:data[i].id}];
-        }else{
-          this.managersList = [...this.managersList, {nom:data[i].prenom+"."+data[i].nom,id:data[i].id}];
-        }      
-      }
-    })
   }
 
   ApiShowProfile(_id:number){
+    this.managersList = []
     this.service.getUser(_id).subscribe(data=> {// GET: current user
       this.currentUserData=data;
       this.initProfile(this.currentUserData.nom,this.currentUserData.prenom,this.currentUserData.role,this.currentUserData.manager,this.currentUserPass,this.currentUserPass)
+    },
+    error => alert("Can't find the user selected"))
+    this.service.getManagers().subscribe(data=> {// GET: list des users
+      for (let i = 0; i < data.length; i++) {
+        if(this.selectedUserId!=data[i].id){
+          this.managersList = [...this.managersList, {nom:data[i].prenom+"."+data[i].nom,id:data[i].id}];
+        }     
+      }
     })
   }
 
@@ -116,19 +116,15 @@ export class ProfileComponent implements OnInit {
    if(isNewUser==true){
 
     if (password == passconfirm && password!="" && password!=null){
-      //console.log("newusertrue")
       return true;
     }else{
-      //console.log("newuserfalse")
       return false;
     }
    }else{
 
     if (password == passconfirm){
-      //console.log("notnewusertrue")
       return true;
     }else{
-      //console.log("notnewuserfalse")
       return false;
     }
    }
@@ -136,11 +132,9 @@ export class ProfileComponent implements OnInit {
   }
 
   isEmpty(): Boolean {
-    if (this.name=="" || this.firstname==""){
-      //console.log("null")
+    if (this.name=="" || this.firstname=="" || (this.role=="ROLE_User" && this.manager==null)){
       return true;
     }else{
-      //console.log("pasnull")
       return false;
     }
   }
@@ -150,16 +144,16 @@ export class ProfileComponent implements OnInit {
     this.firstname=_firstname;
     this.role=_role;
     this.manager=_manager;
-    // this.password=_password;
-    // this.passconfirm=_passconfirm;
+    this.password=null;
+    this.passconfirm=null;
   }
 
   newUser(){
     this.popupNewUser=true;
-    this.name="";
-    this.firstname="";
-    this.manager="";
-    this.password="";
+    this.name=null;
+    this.firstname=null;
+    this.manager=null;
+    this.password=null;
   }
 
   save(_nom:string,_prenom:string,_password:string,_role:string,_manager:number): void {

@@ -1,6 +1,6 @@
 <div class="calendarpage d-flex justify-content-between">
     <div>
-        <h3>Période : {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+        <h4>Période : {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h4>
     </div>
     <div class="btn-toolbar">
         <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate">
@@ -17,7 +17,7 @@
 
 <div [ngSwitch]="CalendarView.Week" class="calendar">
     <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events" [hourSegments]="1"
-        [dayEndHour]="7" [hourSegmentHeight]="45" [weekStartsOn]="1">
+        [dayEndHour]="7" [hourSegmentHeight]="40" [weekStartsOn]="1">
     </mwl-calendar-week-view>
 </div>
 
@@ -27,7 +27,7 @@
         <small class="form-text text-muted" *ngIf="currentUserRole=='ROLE_Manager'">See the time management of users you
             are managing.</small>
         <ng-select *ngIf="currentUserRole=='ROLE_Manager'" [items]="usersOfManager" bindLabel="nom" bindValue="id"
-            placeholder="Select a user time management" [(ngModel)]="selectedUserId"
+            placeholder="Select a user time management" [(ngModel)]="selectedUserId" [clearable]="false"
             (change)="refreshCalendar(selectedUserId)">
         </ng-select>
     </div>
@@ -39,6 +39,69 @@
 </div>
 
 <hr>
+
+<div class="d-flex justify-content-between padding ">
+    <div class="form-group mb-4">
+        <input class="form-control" type="text" [(ngModel)]="searchText" placeholder="Filter the time list">
+    </div>
+    <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" [checked]="showLocked" (change)="showLocked = !showLocked">
+        <label class="form-check-label">Show Locked Times</label>
+    </div>
+</div>
+
+<div id="ListHeight" class="d-flex justify-content-center">
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th class="tabwidth">Date</th>
+                    <th class="tabwidth">Weight</th>
+                    <th class="tabwidth">Status</th>
+                </tr>
+            </thead>
+            <tbody *ngIf="showLocked==true">
+                <tr *ngFor="let event of formattedEvents | filter: searchText; let i = index">
+                    <td>
+                        <p>{{event.project}}</p>
+                    </td>
+                    <td>
+                        <p class="center">{{event.date}}</p>
+                    </td>
+                    <td>
+                        <p class="center">{{event.poids}}</p>
+                    </td>
+                    <td class="d-flex justify-content-center">
+                        <button *ngIf="event.islocked==false" class="btn btn-danger" (click)="deleteEvent(event,i)">
+                            Delete time
+                        </button>
+                        <button *ngIf="event.islocked==true" class="btn btn-secondary" disabled>Time locked</button>
+                    </td>
+                </tr>
+            </tbody>
+
+            <tbody *ngIf="showLocked==false">
+                <tr *ngFor="let event of formattedEvents | filter: searchText; let i = index">
+                    <td *ngIf="event.islocked==false">
+                        <p>{{event.project}}</p>
+                    </td>
+                    <td *ngIf="event.islocked==false">
+                        <p class="center">{{event.date}}</p>
+                    </td>
+                    <td *ngIf="event.islocked==false">
+                        <p class="center">{{event.poids}}</p>
+                    </td>
+                    <td class="d-flex justify-content-center" *ngIf="event.islocked==false">
+                        <button class="btn btn-danger" (click)="deleteEvent(event,i)">
+                            Delete time
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <div class="overlay" *ngIf="popupAddTime" onLoad="this.focus()">
     <div class="popup">
@@ -63,46 +126,20 @@
 <div class="overlay" *ngIf="popupExportPDF" onLoad="this.focus()">
     <div class="popup">
         <h2>Exportation des temps</h2>
-        <p>Select starting date</p>
+        <!-- <p>Select starting date</p>
         <input type="date" name="date" [(ngModel)]="PDF_startingDate">
         <br>
         <p>Select ending date</p>
-        <input type="date" name="date" placeholder="AAAA-MM-DD" [(ngModel)]="PDF_endingDate">
+        <input type="date" name="date" placeholder="AAAA-MM-DD" [(ngModel)]="PDF_endingDate"> -->
+        <p>Select the month to export</p>
+        <input type="month" name="date" [(ngModel)]="PDF_ExportingMonth">
+        <hr>
         <div class="d-flex justify-content-between">
-            <button class="btn btn-success" (click)="convert(PDF_startingDate,PDF_endingDate)"
-                (click)="popupExportPDF = false">
+            <!-- <button class="btn btn-success" (click)="exportDate(PDF_startingDate,PDF_endingDate)"
+                (click)="popupExportPDF = false"> -->
+            <button class="btn btn-success" (click)="exportMonth(PDF_ExportingMonth)" (click)="popupExportPDF = false">
                 PDF </button>
             <button class="btn btn-danger" (click)="popupExportPDF = false">Cancel</button>
         </div>
-    </div>
-</div>
-
-<div id="ListHeight" class="d-flex justify-content-center">
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>Project Name</th>
-                    <th class="tabwidth">Date</th>
-                    <th class="tabwidth">Remove</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr *ngFor="let event of formattedEvents; let i = index">
-                    <td>
-                        <p>{{event.project}}</p>
-                    </td>
-                    <td>
-                        <p class="center">{{event.date}}</p>
-                    </td>
-                    <td>
-                        <button class="btn btn-danger" (click)="deleteEvent(event,i)">
-                            Delete this line
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
     </div>
 </div>

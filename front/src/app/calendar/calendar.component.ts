@@ -22,7 +22,6 @@ export class CalendarComponent implements OnInit {
     this.getEventsfromapi();
   }
 
-  //manager id : http://localhost:8080/personnes/manager=1
   usersOfManager:any= []
   currentUserId:any;
   currentUserRole:any;
@@ -40,11 +39,14 @@ export class CalendarComponent implements OnInit {
   CalendarView = CalendarView;
   events: CalendarEvent[] = []
   formattedEvents: any = []
+
   projectsListName:any=[];
   projectsListId:any=[];
   tempsListId:any=[];
-
+  showLocked=false;
+  searchText:any
   PdfData:any= []
+
   times = [
     {time: 0.125},
     {time: 0.25},
@@ -65,7 +67,7 @@ export class CalendarComponent implements OnInit {
       }
     })
 
-    if(this.currentUserRole=='ROLE_Manager'){
+    // if(this.currentUserRole=='ROLE_Manager'){
           this.service.getUsers().subscribe(data=> {// GET: list des users d'un manager
           for (let i = 0; i < data.length; i++) {
             if(this.currentUserId==data[i].id){ //Self time management
@@ -77,11 +79,11 @@ export class CalendarComponent implements OnInit {
             }
           }
         })
-    }
+    // }
 
     this.service.getTemps(this.selectedUserId).subscribe(data=> {// GET: list des temps
       for (let i = 0; i < data.length; i++) {
-        this.initEvent(data[i].projet.nom,data[i].date,data[i].poids,data[i].projet.couleur)
+        this.initEvent(data[i].projet.nom,data[i].date,data[i].poids,data[i].projet.couleur,data[i].locked)
         this.tempsListId.push(data[i].id);
         this.PdfData.push({nom:data[i].projet.nom,date:data[i].date,poids:data[i].poids});
       }
@@ -90,11 +92,21 @@ export class CalendarComponent implements OnInit {
   
   ApiPostTemps(date:string,poids:number,user_id:number,project_id:number){
     this.service.postTemps(date,poids,user_id,project_id).subscribe(data=>{
-    })
+    },
+    error => alert("Mois déja verouillé")
+    )
   }
 
   ApiDeleteTemps(id:number){
     this.service.deleteTemps(id).subscribe(data=>{
+    })
+  }
+
+  ApiVerrouTemps(monthDate:String,id:Number){
+    this.service.verrouTemps(monthDate,id).subscribe(data=>{
+      // for (let i = 0; i < data.length; i++) {
+      // this.PdfData.push({nom:data[i].projet.nom,date:data[i].date,poids:data[i].poids});
+      // }
     })
   }
   //-------------------------------------------------------------------------
@@ -132,27 +144,31 @@ export class CalendarComponent implements OnInit {
   getUserbyId(id:number){
     for (let i = 0; i < this.usersOfManager.length; i++) {
       if (this.usersOfManager[i].id==id){
+        if (this.usersOfManager[i].nom.startsWith('(You)'))
+        {
+          var cleanString = this.usersOfManager[i].nom.substring(6);
+          return cleanString
+        }
         return this.usersOfManager[i].nom;
       }
     }
     return "user not found";
   }
 
-  initEvent(projet: string,date: string,time: any,color:any): void {
+  initEvent(projet: string,date: string,weight: any,color:any,locked:boolean): void {
     this.events = [
       ...this.events,
       {
         title: projet,
         start: startOfDay(new Date(date)),
-        end: addDate(new Date(date),time),
+        end: addDate(new Date(date),weight),
         color:  {
           primary: '#FFFFFF',
           secondary: color,
         },
       },
     ];
-    this.formattedEvents =[...this.formattedEvents, {project: projet, date: date}]
-    console.log(this.formattedEvents)
+    this.formattedEvents =[...this.formattedEvents, {project: projet, date: date,poids: weight,islocked: locked}]
   }
 
   postEvent(projet: string,date: string,time: any): void {
@@ -169,21 +185,25 @@ export class CalendarComponent implements OnInit {
   //-------------------------------------------------------------------------
 
   //Gestion PDF--------------------------------------------------------------
-  PDF_startingDate: any;
-  PDF_endingDate: any;
 
-  convert(startingDate:Date,endingDate:Date) {
+  // OLD FUNCTION (export times between 2 dates)
+  /*PDF_startingDate: any;
+  PDF_endingDate: any;
+  exportDate(startingDate:Date,endingDate:Date) {
     var doc = new jspdf();
     
     var PDF_head = [['Project','Date','Weight']];
     var PDF_body:any=[];
+
+
 
     this.PdfData.forEach((element: { nom: any; date: any; poids: any; }) => {      
       var temp = [element.nom,element.date,element.poids];
       if (new Date(element.date)>=new Date(startingDate) && new Date(element.date)<=new Date(endingDate)){
         PDF_body.push(temp);
       }
-    });       
+
+    });
     doc.setFontSize(16)
     doc.text("Temps de "+this.getUserbyId(this.selectedUserId)+" (du "+startingDate+" au "+endingDate+")", 15, 10);
     (doc as any).autoTable({
@@ -193,8 +213,36 @@ export class CalendarComponent implements OnInit {
     })
     // doc.save('Test.pdf');
     doc.output('dataurlnewwindow');
+  }*/
 
+  PDF_ExportingMonth:any;
+  exportMonth(selectedMonth:String) {
+    var doc = new jspdf();
+    var PDF_head = [['Project','Date','Weight']];
+    var PDF_body:any=[];
+    
+    this.ApiVerrouTemps(selectedMonth,this.selectedUserId)
 
+    var firstDay = new Date(selectedMonth+"-01");
+    var lastDay = new Date(firstDay.getFullYear(), firstDay.getMonth() + 1, 0,firstDay.getHours()+22);
+
+    this.PdfData.forEach((element: { nom: any; date: any; poids: any; }) => {      
+      var temp = [element.nom,element.date,element.poids];
+      if (new Date(element.date)>=new Date(firstDay) && new Date(element.date)<=new Date(lastDay)){
+        PDF_body.push(temp);
+      }
+    });
+
+    doc.setFontSize(16)
+    doc.text("Temps de "+this.getUserbyId(this.selectedUserId)+" du mois "+selectedMonth, 15, 10);
+    (doc as any).autoTable({
+      head: PDF_head,
+      body: PDF_body,
+      theme: 'grid', //striped,plain,grid
+    })
+    doc.save(selectedMonth+'-'+this.getUserbyId(this.selectedUserId)+'.pdf');
+    //doc.output('dataurlnewwindow');
+    window.location.reload();
   }
   //-------------------------------------------------------------------------
 

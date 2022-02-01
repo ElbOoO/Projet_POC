@@ -1,11 +1,26 @@
 .calendar {
   width: 90%;
   margin-left: 5%;
-  margin-top: 20px;
+  margin-top: 1%;
 }
+.calendarpage {
+  margin-top: 1%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
 .table-responsive {
   width: 90%;
+  overflow-y: scroll;
 }
+.form-group {
+  width: 50%;
+}
+.padding {
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
 .tabwidth {
   width: 10%;
   text-align: center;
@@ -20,6 +35,7 @@
 #mySelect {
   width: 35%;
 }
+
 button {
   max-height: 50px;
 }
@@ -27,12 +43,6 @@ button {
   width: 20%;
   margin-left: 40%;
   margin-top: 20px;
-}
-
-.calendarpage {
-  margin-top: 1%;
-  margin-left: 5%;
-  margin-right: 5%;
 }
 
 .overlay {
