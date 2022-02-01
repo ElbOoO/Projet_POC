@@ -78,6 +78,10 @@ export class RestapiService {
     return this.http.delete<Temps>(LINK_API +'temps/'+_id.toString(),this.makeHeader())
   };
 
+  public verrouTemps (monthDate:String,id:Number){
+    return this.http.get<Temps[]>(LINK_API +'temps/export/'+id+'/'+monthDate+'-01',this.makeHeader())
+  };
+
   // Gestion des Projets par l'API----------------------------------------------------------------------------
   public getProject(){
     return this.http.get<Projet[]>(LINK_API +'projets',this.makeHeader())
@@ -105,40 +109,42 @@ interface Temps{
   id:number;
   date: string;
   poids: number;
+  utilisateur:User;
   projet:Projet;
-
+  locked:boolean;
 }
 
 
-interface Projets {
-  Projet: Projet[]
-}
+// interface Projets {
+//   Projet: Projet[]
+// }
 
 interface Projet {
   id:number;
   nom: string;
-  manager: manager;
-  couleur: string
+  couleur: string;
+  manager: number;
+
 
 }
 
-interface manager {
-id : number
-nom:string
-prenom:string
-password:string
-role:string
-username:string
-}
+// interface manager {
+//   id : number
+//   nom:string
+//   prenom:string
+//   password:string
+//   role:string
+//   username:string
+// }
 
 interface User{
-  id: number,
-  prenom:string
-  nom:string
-  role:string
-  manager: number
+  id: number;
+  prenom:string;
+  nom:string;
+  role:string;
+  manager: number;
 }
 
-interface Error{
-error:string
-}
+// interface Error{
+// error:string
+// }
