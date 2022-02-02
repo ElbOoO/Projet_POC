@@ -57,3 +57,6 @@ Le projet s'est découpé en plusieurs étapes:
 
 ## Swagger
 La documentation de l'API est désormais disponible à l'adresse : http://localhost:8080/swagger-ui/
+
+## Autre liens
+https://trello.com/b/Yh6luLYF/backlog-projet-poc
