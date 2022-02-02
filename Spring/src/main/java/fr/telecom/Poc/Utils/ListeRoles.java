@@ -1,5 +1,8 @@
 package fr.telecom.Poc.Utils;
 
+/**
+ * Liste des rôles possibles pour les Personnes
+ */
 public enum ListeRoles {
 	ROLE_User, ROLE_Manager, ROLE_Admin;
 

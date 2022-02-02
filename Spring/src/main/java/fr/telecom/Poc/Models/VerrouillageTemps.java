@@ -6,6 +6,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * Classe qui represente les mois deja exportes pour un utilisateur
+ */
 @Entity
 @Table(name = "Verrou")
 public class VerrouillageTemps {

@@ -18,6 +18,10 @@ import fr.telecom.Poc.Repositories.TempsRepository;
 import fr.telecom.Poc.Repositories.VerrouillageTempsRepository;
 import fr.telecom.Poc.Services.ServicesImpl.VerrouillageTempsServiceImpl;
 
+/**
+ * Command Line Runner charge de remplir automatiquement la base de donnees pour
+ * pouvoir faire des tests avec l'API
+ */
 @Component
 public class DBRunner implements CommandLineRunner {
 	// Remplie la database poc_db pour des tests plus tard
@@ -58,7 +62,9 @@ public class DBRunner implements CommandLineRunner {
 		Temps t2 = new Temps(LocalDate.now(), 0.25, gregoire, pri);
 		Temps t3 = new Temps(LocalDate.now(), 1.0, ruben, ntiers);
 
-		VerrouillageTemps verrou = new VerrouillageTemps(1, 2022, ruben);
+		VerrouillageTemps verrou = new VerrouillageTemps(LocalDate.now().getMonthValue(),
+				LocalDate.now().getDayOfMonth(), ruben);
+		t3.setLocked(true);
 
 		// --- On remplit la bdd ---
 		try {
