@@ -2,7 +2,7 @@
 ## Sujet : Application de saisie de temps
 
 Réalisation d’une application web permettant la saisie, la consultation, l'édition des temps dans une entreprise de développement
-
+![alt text](https://github.com/ElbOoO/Projet_POC/blob/main/front.jpg?raw=true)
 ## User Stories
 
 - Users
