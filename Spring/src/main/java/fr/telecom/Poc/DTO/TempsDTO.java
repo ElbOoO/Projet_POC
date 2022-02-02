@@ -4,6 +4,9 @@ import java.time.LocalDate;
 
 import fr.telecom.Poc.Models.Temps;
 
+/**
+ * Classe de Data Transfert Object utilisee par l'API pour renvoyer des Temps
+ */
 public class TempsDTO {
 
 	private Integer id;

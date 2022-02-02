@@ -2,6 +2,10 @@ package fr.telecom.Poc.Payloads.Requests;
 
 import java.time.LocalDate;
 
+/**
+ * Payload pour la requete d'ajout de nouveaux temps (demande la date et le
+ * poids du temps, l'utilisateur et le projet auxquels il est lie)
+ */
 public class TempsRequest {
 	private LocalDate date;
 	private Double poids;

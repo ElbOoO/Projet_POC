@@ -3,6 +3,10 @@ package fr.telecom.Poc.Payloads.Requests;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Payload pour la requete de creation d'une nouvelle Personne (demande le nom,
+ * prenom, mot de passe, role et eventuellement le manager)
+ */
 public class NouvellePersonneRequest {
 	@NotNull
 	@NotBlank

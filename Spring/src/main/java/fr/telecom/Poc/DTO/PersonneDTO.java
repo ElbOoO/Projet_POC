@@ -2,6 +2,10 @@ package fr.telecom.Poc.DTO;
 
 import fr.telecom.Poc.Models.Personne;
 
+/**
+ * Classe de Data Transfert Object utilisee pour par l'API pour renvoyer des
+ * Personnes
+ */
 public class PersonneDTO {
 
 	private Integer id;

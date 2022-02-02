@@ -12,6 +12,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+/**
+ * Classe qui represente les utilisateur de l'application
+ */
 @Entity
 @Table(name = "Personne", uniqueConstraints = {
 		@UniqueConstraint(name = "UniqueUsername", columnNames = { "nom", "prenom" }) })
@@ -26,16 +29,16 @@ public class Personne {
 
 	@ManyToOne
 	private Personne manager;
-	
+
 	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "utilisateur", fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<VerrouillageTemps> verrous;
-	
+
 	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "utilisateur", fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<Temps> temps;
 
 	@OneToMany(cascade = CascadeType.DETACH, mappedBy = "manager", fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<Projet> projets;
-	
+
 	public Personne() {
 	}
 

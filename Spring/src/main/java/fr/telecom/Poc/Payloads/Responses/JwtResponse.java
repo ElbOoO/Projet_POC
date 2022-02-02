@@ -2,6 +2,9 @@ package fr.telecom.Poc.Payloads.Responses;
 
 import java.util.List;
 
+/**
+ * Classe chargee de renvoyer un token apres l'authentification d'un utilisateur
+ */
 public class JwtResponse {
 
 	private String token;

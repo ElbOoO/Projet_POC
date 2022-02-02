@@ -10,6 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+/**
+ * Classe qui represente les projets qui sont rentres dans l'application
+ */
 @Entity
 public class Projet {
 	@Id
@@ -22,7 +25,7 @@ public class Projet {
 
 	@ManyToOne
 	private Personne manager;
-	
+
 	@OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "projet", fetch = FetchType.LAZY)
 	private Set<Temps> temps;
 

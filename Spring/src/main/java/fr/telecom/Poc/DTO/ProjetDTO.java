@@ -2,6 +2,9 @@ package fr.telecom.Poc.DTO;
 
 import fr.telecom.Poc.Models.Projet;
 
+/**
+ * Classe de Data Transfert Object utilisee par l'API pour renvoyer des Projets
+ */
 public class ProjetDTO {
 
 	private Integer id;

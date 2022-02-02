@@ -7,6 +7,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+/**
+ * Classe qui represente les temps des utilisateurs
+ */
 @Entity
 public class Temps {
 	@Id

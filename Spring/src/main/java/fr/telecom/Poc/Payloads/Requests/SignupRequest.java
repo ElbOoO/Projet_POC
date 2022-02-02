@@ -1,15 +1,15 @@
 package fr.telecom.Poc.Payloads.Requests;
 
+/**
+ * Payload pour la requete de creation d'un nouveau compte (demande le prenom,
+ * nom, role et mot de passe)
+ */
 public class SignupRequest {
 
 	private String prenom;
 	private String nom;
 	private String role;
 	private String password;
-
-	/*
-	 * public SignupRequest() { this.role = new ArrayList<String>(); }
-	 */
 
 	public String getPrenom() {
 		return prenom;

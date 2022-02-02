@@ -3,6 +3,10 @@ package fr.telecom.Poc.Payloads.Requests;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Payload pour la modification d'informations d'une Personne (demande le
+ * nouveau nom, prenom, role, mot de passe et/ou manager)
+ */
 public class PatchPersonneRequest {
 
 	@NotNull(message = "Erreur : Il faut obligatoirement un id.")
