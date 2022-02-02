@@ -41,8 +41,8 @@ Le projet s'est découpé en plusieurs étapes:
     - Avancement simultané du front*end & du back-end
 
 - Finalisation
-    - Corrections de bugs
-    - Mjustements
+    - Correction de bugs
+    - Ajustements
     - JUNITS tests
 
 
